@@ -1,0 +1,55 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.GymTrack" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <!-- Usaremos un gris oscuro azulado/neutro para la Toolbar -->
+        <item name="colorPrimary">@color/accent_teal_dark</item> <!-- #1F1F1F -->
+        <item name="colorPrimaryVariant">@color/black</item> <!-- #000000 (Status Bar) -->
+        <item name="colorOnPrimary">@color/white_text_primary</item> <!-- #FFFFFF -->
+
+        <!-- Secondary brand color (ACENTO VIVO) -->
+        <item name="colorSecondary">@color/electric_blue</item> <!-- #2979FF -->
+        <item name="colorSecondaryVariant">@color/electric_blue_dark</item> <!-- #0055CB (Ejemplo más oscuro) -->
+        <!-- Texto sobre el acento azul -->
+        <item name="colorOnSecondary">@color/white_text_primary</item> <!-- #FFFFFF (Blanco contrasta bien con azul vivo) -->
+
+        <!-- Status bar color -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <!-- Backgrounds and Surfaces -->
+        <item name="android:colorBackground">@color/dark_grey_blue</item> <!-- #000000 (Fondo negro puro) -->
+        <!-- Superficies pueden ser ligeramente diferentes o iguales al fondo -->
+        <item name="colorSurface">@color/dark_almost_black</item> <!-- #1F1F1F (Para tarjetas, diálogos) -->
+        <item name="colorError">@color/dark_error</item> <!-- #CF6679 -->
+
+        <!-- "On" Colors (Text & Icons) -->
+        <item name="colorOnBackground">@color/white_text_primary</item> <!-- #FFFFFF -->
+        <item name="colorOnSurface">@color/white_text_secondary</item> <!-- #E0E0E0 (Texto secundario/menos importante) -->
+        <item name="colorOnError">@color/black_text</item> <!-- #000000 -->
+
+        <!-- Color de iconos/texto que no usan primario/secundario directamente -->
+        <!-- Suele basarse en onSurface o un gris -->
+        <item name="android:textColorPrimary">?attr/colorOnSurface</item>
+        <item name="android:textColorSecondary">@color/medium_emphasis_dark</item> <!-- #A0A0A0 (Gris medio para hints/textos menos importantes) -->
+        <item name="colorControlNormal">@color/medium_emphasis_dark</item> <!-- Color de iconos inactivos, etc. -->
+        <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- Estilo para Títulos de Día -->
+    <style name="RoutineDayTitle" parent="TextAppearance.MaterialComponents.Headline6">
+        <!-- Puedes añadir personalizaciones aquí: color, tamaño, etc. -->
+        <!-- <item name="android:textColor">?attr/colorPrimary</item> -->
+    </style>
+
+    <!-- Estilo para Texto de Ejercicio -->
+    <style name="RoutineExerciseText" parent="TextAppearance.MaterialComponents.Body1">
+        <!-- Personalizaciones -->
+    </style>
+
+    <!-- Estilo para "Sin días/ejercicios" -->
+    <style name="RoutinePlaceholderText" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+    </style>
+</resources>

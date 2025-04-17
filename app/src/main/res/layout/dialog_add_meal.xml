@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:text="Añadir Comida"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+        <!-- Título de la Comida (Desplegable) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_meal_title"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:hint="Tipo de Comida">
+            <AutoCompleteTextView
+                android:id="@+id/auto_complete_meal_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Descripción (Opcional, para IA) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_meal_description"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:hint="Describe la comida (Opcional, para IA)">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_meal_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Botón para estimar con IA -->
+        <Button
+            android:id="@+id/button_estimate_macros"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginBottom="16dp"
+            android:text="Estimar Macros con IA"
+            app:icon="@drawable/ic_ai_icon" />
+
+
+        <!-- Macros (Editables) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Macronutrientes"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:layout_marginBottom="8dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+            <!-- Calorías -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_meal_calories" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:layout_marginEnd="4dp" android:hint="Kcal">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_text_meal_calories" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:inputType="number"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <!-- Proteínas -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_meal_protein" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:layout_marginStart="4dp" android:layout_marginEnd="4dp" android:hint="Prot (g)">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_text_meal_protein" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:inputType="number"/>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+            <!-- Carbos -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_meal_carbs" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:layout_marginEnd="4dp" android:hint="Carb (g)">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_text_meal_carbs" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:inputType="number"/>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <!-- Botones de Acción -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/dialog_meal_button_cancel"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Cancelar" />
+            <Button
+                android:id="@+id/dialog_meal_button_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Añadir Comida" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/dialog_meal_progress_bar"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+</ScrollView>

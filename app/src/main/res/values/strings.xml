@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">GymTrack</string>
+    <string name="title_user">Usuario</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_dieta">Dieta</string>
+
+    <string-array name="objetivo_options">
+        <item name = "PERDER_PESO">Perder Peso (Rápido)</item> <!-- Corresponde a PERDER_PESO? Ajusta clave/texto -->
+        <item name = "PERDER_PESO_LENTO">Perder Peso (Lento)</item> <!-- Corresponde a PERDER_PESO_LENTO? -->
+        <item name = "MANTENER">Mantener Peso</item>      <!-- Corresponde a MANTENER? -->
+        <item name = "GANAR_MASA">Ganar Masa Muscular</item> <!-- Corresponde a GANAR_MASA? -->
+        <item name = "GANAR_MASA_RAPIDO">Ganar Masa (Rápido)</item> <!-- Corresponde a GANAR_MASA_RAPIDO? -->
+    </string-array>
+
+    <string-array name="nivel_actividad_options">
+        <item>Sedentario (Poco o ningún ejercicio)</item>
+        <item>Ligero (Ejercicio 1-3 días/sem)</item>
+        <item>Moderado (Ejercicio 3-5 días/sem)</item>
+        <item>Activo (Ejercicio 6-7 días/sem)</item>
+        <item>Muy Activo (Ejercicio intenso + Trabajo físico)</item>
+    </string-array>
+
+    <string-array name="meal_title_options">
+        <item>Desayuno</item>
+        <item>Almuerzo</item>
+        <item>Cena</item>
+        <item>Snack Mañana</item>
+        <item>Snack Tarde</item>
+        <item>Pre-Entreno</item>
+        <item>Post-Entreno</item>
+        <item>Otro</item>
+    </string-array>
+</resources>
