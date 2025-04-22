@@ -1,4 +1,4 @@
-package com.example.gymtrack.ui.home // O donde esté tu diálogo
+package com.example.gymtrack.ui.user // O donde esté tu diálogo
 
 // Importa User desde tu paquete model
 import User

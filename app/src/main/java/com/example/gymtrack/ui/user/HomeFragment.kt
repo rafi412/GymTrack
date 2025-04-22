@@ -1,4 +1,4 @@
-package com.example.gymtrack.ui.home
+package com.example.gymtrack.ui.user
 
 // Importa tu clase User (asegúrate que la ruta es correcta)
 import User
@@ -13,10 +13,8 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.gymtrack.LoginActivity // Necesario para redirigir
-import com.example.gymtrack.R // Necesario para recursos como strings
 import com.example.gymtrack.databinding.FragmentHomeBinding
 // Importa el DialogFragment y su Listener (asegúrate que las rutas son correctas)
-import com.example.gymtrack.ui.home.ProfileEditListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser // Importar FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -151,7 +149,7 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
             }
     }
 
-    // Muestra los datos básicos del usuario (sin las metas, esas se añaden después)
+    // Muestra los datos básicos del usuario
     private fun displayUserData() {
         val user = currentUserProfile // Usa el perfil cargado de Firestore
         if (user != null) {

@@ -1,4 +1,4 @@
-package com.example.gymtrack.ui.dieta
+package com.example.gymtrack.ui.diet
 
 
 import android.view.LayoutInflater

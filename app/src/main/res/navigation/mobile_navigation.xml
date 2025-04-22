@@ -9,7 +9,7 @@
     <!-- Destinos principales existentes (para BottomNav/Drawer) -->
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.gymtrack.ui.home.HomeFragment"
+        android:name="com.example.gymtrack.ui.user.HomeFragment"
         android:label="@string/title_user"
         tools:layout="@layout/fragment_home" />
 
@@ -30,7 +30,7 @@
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.example.gymtrack.ui.dieta.DietaFragment"
+        android:name="com.example.gymtrack.ui.diet.DietaFragment"
         android:label="@string/title_dieta"
         tools:layout="@layout/fragment_dieta" />
 
@@ -45,7 +45,7 @@
     <!-- ***** NUEVOS FRAGMENTOS AÑADIDOS para Creación de Rutina ***** -->
     <fragment
         android:id="@+id/createRoutineDetailsFragment"
-        android:name="com.example.gymtrack.ui.exercise.CreateRoutineDetailsFragment"
+        android:name="com.example.gymtrack.ui.exercise.routine.CreateRoutineDetailsFragment"
         android:label="Crear Rutina - Detalles"
         tools:layout="@layout/fragment_create_routine_details">
         <!-- Acción para ir al siguiente paso: añadir días -->

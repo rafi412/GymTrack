@@ -1,4 +1,4 @@
-package com.example.gymtrack.ui.dieta // O tu paquete
+package com.example.gymtrack.ui.diet // O tu paquete
 
 import android.os.Bundle
 import android.util.Log
@@ -15,8 +15,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.gymtrack.R
 import com.example.gymtrack.databinding.DialogAddMealBinding
-import com.example.gymtrack.ui.dieta.MealData
-import com.example.gymtrack.ui.dieta.MacroEstimate
 import com.google.ai.client.generativeai.GenerativeModel
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -93,7 +91,7 @@ class AddMealDialogFragment : DialogFragment() {
                 Log.e(TAG, "API Key inválida o no configurada.")
                 throw IllegalStateException("API Key no configurada")
             }
-            generativeModel = GenerativeModel(modelName = "gemini-1.5-flash-latest", apiKey = apiKey)
+            generativeModel = GenerativeModel(modelName = "gemini-1.5-pro-latest", apiKey = apiKey)
             isGeminiInitialized = true
             Log.d(TAG, "GenerativeModel inicializado con éxito.") // LOG ÉXITO Init
         } catch (e: Exception) {

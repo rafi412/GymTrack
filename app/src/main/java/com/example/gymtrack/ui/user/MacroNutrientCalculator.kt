@@ -1,4 +1,4 @@
-package com.example.gymtrack.ui.home // O tu paquete preferido
+package com.example.gymtrack.ui.user // O tu paquete preferido
 
 import android.util.Log
 import kotlin.math.roundToInt

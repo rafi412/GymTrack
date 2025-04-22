@@ -1,9 +1,7 @@
-package com.example.gymtrack.ui.dieta
+package com.example.gymtrack.ui.diet
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +12,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle // Importar repeatOnLifecycle
@@ -24,15 +21,11 @@ import com.example.gymtrack.BuildConfig
 import com.example.gymtrack.R
 import com.example.gymtrack.databinding.FragmentDietaBinding
 // Importar Adapter y Modelo de Comida (ajusta la ruta si es necesario)
-import com.example.gymtrack.ui.dieta.MealAdapter // Importar MealAdapter
-import com.example.gymtrack.ui.dieta.MealData // Importar MealData
 
 import com.google.ai.client.generativeai.GenerativeModel
-import com.google.ai.client.generativeai.type.InvalidStateException
 import kotlinx.coroutines.launch
 
 // Importar el DialogFragment (ajusta la ruta si es necesario)
-import com.example.gymtrack.ui.dieta.AddMealDialogFragment
 import kotlin.math.roundToInt
 
 

@@ -1,4 +1,4 @@
-package com.example.gymtrack.ui.exercise // O tu paquete
+package com.example.gymtrack.ui.exercise.routine // O tu paquete
 
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import com.example.gymtrack.databinding.DialogCreateRoutineBinding // Binding del diálogo
+import com.example.gymtrack.ui.exercise.AddDaysDialogFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue

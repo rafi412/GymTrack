@@ -1,4 +1,4 @@
-package com.example.gymtrack.ui.dieta // O tu paquete preferido
+package com.example.gymtrack.ui.diet // O tu paquete preferido
 
 import kotlinx.serialization.Serializable
 

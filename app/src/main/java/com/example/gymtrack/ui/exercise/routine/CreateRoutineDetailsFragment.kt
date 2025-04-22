@@ -1,4 +1,4 @@
-package com.example.gymtrack.ui.exercise // O tu paquete
+package com.example.gymtrack.ui.exercise.routine // O tu paquete
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +10,6 @@ import androidx.fragment.app.activityViewModels // Para ViewModel compartido con
 import androidx.navigation.fragment.findNavController
 import com.example.gymtrack.R // Asegúrate de importar tu R
 import com.example.gymtrack.databinding.FragmentCreateRoutineDetailsBinding // Importa el binding correcto
-import com.example.gymtrack.ui.exercise.routine.RoutineCreationViewModel
 
 // --- ASEGÚRATE DE QUE HEREDA DE Fragment ---
 class CreateRoutineDetailsFragment : Fragment() {

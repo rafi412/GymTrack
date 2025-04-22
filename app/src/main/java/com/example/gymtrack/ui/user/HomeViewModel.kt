@@ -1,4 +1,4 @@
-package com.example.gymtrack.ui.home
+package com.example.gymtrack.ui.user
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

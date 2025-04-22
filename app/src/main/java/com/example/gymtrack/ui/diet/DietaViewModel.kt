@@ -1,4 +1,4 @@
-package com.example.gymtrack.ui.dieta
+package com.example.gymtrack.ui.diet
 
 import User
 import android.util.Log
@@ -20,7 +20,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.SerializationException
-import kotlin.math.roundToInt
 
 // Data class para Metas UI (sin cambios)
 data class MacroTargetsUi(

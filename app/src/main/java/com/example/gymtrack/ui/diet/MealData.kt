@@ -1,11 +1,10 @@
-package com.example.gymtrack.ui.dieta
+package com.example.gymtrack.ui.diet
 
 import com.google.firebase.firestore.ServerTimestamp // Para timestamp
 import java.util.Date // Para timestamp
 
 // Representa una comida guardada en Firestore
 data class MealData(
-    // No necesitamos el ID aquí si lo leemos por separado
     val title: String? = null, // "Desayuno", "Almuerzo", etc.
     val description: String? = null, // Lo que el usuario escribió
     @ServerTimestamp val timestamp: Date? = null, // Hora del registro
