@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.gymtrack.LoginActivity // Necesario para redirigir
+import com.example.gymtrack.R
 import com.example.gymtrack.databinding.FragmentHomeBinding
 // Importa el DialogFragment y su Listener (asegúrate que las rutas son correctas)
 import com.google.firebase.auth.FirebaseAuth
@@ -22,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import com.bumptech.glide.Glide // <-- Importa Glide
 
 // Implementa la interfaz del DialogFragment
 class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz correcta
@@ -61,7 +63,7 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
         setupEditButtonListener()
 
         // Ocultar elementos hasta que carguen los datos
-        binding.textHome.isVisible = false
+        binding.profileView.isVisible = false
         binding.editProfileButton.isVisible = false
         loadUserProfile() // Carga los datos del perfil de Firestore
     }
@@ -97,8 +99,8 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
 
     private fun loadUserProfile() {
         showProgressBar(true) // Mostrar ProgressBar
-        // binding.textHome.text = "Cargando perfil..." // No necesario si ProgressBar es visible
-        // binding.textHome.isVisible = true
+        //binding.textHome.text = "Cargando perfil..." // No necesario si ProgressBar es visible
+        binding.profileView.isVisible = true
 
         val userId = currentUser?.uid // Usar el currentUser obtenido en onCreateView
         if (userId == null) {
@@ -142,36 +144,64 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
                 showProgressBar(false) // Ocultar ProgressBar
                 Log.e(TAG, "Error al obtener el perfil del usuario desde Firestore", exception)
                 // Mostrar error en el TextView principal
-                binding.textHome.text = "Error al cargar el perfil: ${exception.message}"
-                binding.textHome.isVisible = true
+                binding.usernameTextView.text = "Error al cargar el perfil: ${exception.message}"
+                binding.profileView.isVisible = true
                 binding.editProfileButton.isVisible = false // No permitir editar si falla la carga
                 Toast.makeText(context, "Error al cargar datos.", Toast.LENGTH_SHORT).show()
             }
     }
 
-    // Muestra los datos básicos del usuario
-    private fun displayUserData() {
-        val user = currentUserProfile // Usa el perfil cargado de Firestore
-        if (user != null) {
-            Log.d(TAG, "Mostrando datos básicos: $user")
-            val profileString = """
-                Bienvenido, ${user.nombre?.takeIf { it.isNotBlank() } ?: "Usuario"}!
+// ... dentro de tu Fragment o Activity
 
-                Email: ${auth.currentUser?.email ?: "N/A"}
-                Edad: ${user.edad?.toString()?.takeIf { it.isNotBlank() } ?: "N/A"} años
-                Peso: ${user.peso?.toString()?.takeIf { it.isNotBlank() } ?: "N/A"} kg
-                Altura: ${user.altura?.toString()?.takeIf { it.isNotBlank() } ?: "N/A"} cm
-                Sexo: ${user.sexo?.takeIf { it.isNotBlank() } ?: "N/A"}
-                Objetivo: ${user.objetivo?.takeIf { it.isNotBlank() } ?: "N/A"}
-                Nivel Actividad: ${user.nivelActividad?.takeIf { it.isNotBlank() } ?: "N/A"}
-            """.trimIndent()
-            // Inicializa el texto con los datos básicos
-            binding.textHome.text = profileString
-            binding.textHome.isVisible = true
+    private fun displayUserData() {
+        val user = currentUserProfile // Tu objeto de perfil personalizado de Firestore
+        val firebaseUser = auth.currentUser // El usuario de Firebase Auth
+
+        if (user != null && firebaseUser != null) { // Verifica ambos usuarios
+            Log.d(TAG, "Mostrando datos del usuario: $user")
+            Log.d(TAG, "Usuario de Firebase Auth: ${firebaseUser.uid}, Email: ${firebaseUser.email}, PhotoURL: ${firebaseUser.photoUrl}")
+
+            // --- Cargar Imagen de Perfil de Google ---
+            val photoUri = firebaseUser.photoUrl // Obtiene la Uri de la foto
+            if (photoUri != null) {
+                Log.d(TAG, "Cargando foto de perfil desde URL: $photoUri")
+                Glide.with(this) // 'this' si estás en un Fragment o Activity
+                    .load(photoUri) // Carga la Uri directamente
+                    .error(R.drawable.ic_user_24dp) // Imagen si hay error (opcional)
+                    // .circleCrop() // Opcional: si tu ImageView no es ShapeableImageView o no está configurada como círculo en XML
+                    .into(binding.profileImageView) // El ImageView destino
+            } else {
+                // Si no hay URL de foto, muestra el placeholder
+                Log.d(TAG, "El usuario no tiene foto de perfil en Firebase Auth.")
+                binding.profileImageView.setImageResource(R.drawable.ic_user_24dp)
+            }
+            // --- Fin Cargar Imagen de Perfil ---
+
+            // --- Rellenar los TextViews (como en la respuesta anterior) ---
+            binding.usernameTextView.text = "Bienvenido, ${user.nombre?.takeIf { it.isNotBlank() } ?: firebaseUser.displayName ?: "Usuario"}!" // Puedes usar displayName de Firebase como fallback
+            binding.emailTextView.text = firebaseUser.email ?: "N/A" // Mejor obtener el email de firebaseUser
+            binding.ageTextView.text = user.edad?.toString()?.takeIf { it.isNotBlank() }
+                ?.let { "$it años" } ?: "N/A"
+            binding.weightTextView.text = user.peso?.toString()?.takeIf { it.isNotBlank() }
+                ?.let { "$it kg" } ?: "N/A"
+            binding.heightTextView.text = user.altura?.toString()?.takeIf { it.isNotBlank() }
+                ?.let { "$it cm" } ?: "N/A"
+            binding.sexTextView.text = user.sexo?.takeIf { it.isNotBlank() } ?: "N/A"
+            binding.objectiveTextView.text = user.objetivo?.takeIf { it.isNotBlank() } ?: "N/A"
+            // Asegúrate de tener activityLevelTextView en tu XML si lo usas
+            // --- Fin Rellenar TextViews ---
+
         } else {
-            Log.w(TAG, "Intento de mostrar datos con currentUserProfile null")
-            binding.textHome.text = "No se pudo mostrar el perfil."
-            binding.textHome.isVisible = true
+            Log.w(TAG, "Intento de mostrar datos con currentUserProfile o firebaseUser null")
+            // Muestra estado de error o vacío
+            binding.usernameTextView.text = "Perfil no disponible"
+            binding.emailTextView.text = "N/A"
+            binding.ageTextView.text = "N/A"
+            binding.weightTextView.text = "N/A"
+            binding.heightTextView.text = "N/A"
+            binding.sexTextView.text = "N/A"
+            binding.objectiveTextView.text = "N/A"
+            binding.profileImageView.setImageResource(R.drawable.ic_user_24dp)
         }
     }
 
@@ -183,7 +213,7 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
         if (user == null || userId == null) {
             Log.w(TAG, "No se pueden calcular metas: faltan datos de usuario.")
             // Añadir mensaje a la UI indicando que faltan datos
-            binding.textHome.append("\n\nMetas Diarias: Completa tu perfil para calcular.")
+            binding.usernameTextView.append("\n\nMetas Diarias: Completa tu perfil para calcular.")
             return
         }
 
@@ -198,7 +228,7 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
         // Validar que tenemos los datos necesarios ANTES de calcular
         if (age == null || sex == null || weightKg == null || heightCm == null || activityLevel == null || goal == null) {
             Log.w("MacroGoals", "Faltan datos en el perfil para calcular macros (edad, sexo, peso, altura, actividad, objetivo).")
-            binding.textHome.append("\n\nMetas Diarias: Completa tu perfil (edad, sexo, peso, altura, actividad, objetivo) para calcular.")
+            binding.usernameTextView.append("\n\nMetas Diarias: Completa tu perfil (edad, sexo, peso, altura, actividad, objetivo) para calcular.")
             return
         }
 
@@ -240,7 +270,7 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
         } else {
             Log.e("MacroGoals", "El cálculo de metas falló (devolvió null). Revisa logs de MacroCalc.")
             Toast.makeText(context, "No se pudieron calcular las metas.", Toast.LENGTH_SHORT).show()
-            binding.textHome.append("\n\nMetas Diarias: No se pudieron calcular.")
+            binding.usernameTextView.append("\n\nMetas Diarias: No se pudieron calcular.")
         }
     }
 
@@ -324,15 +354,15 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
 
     private fun handleProfileConversionError(message: String = "Error al leer datos del perfil.") {
         Log.w(TAG, message)
-        binding.textHome.text = message
-        binding.textHome.isVisible = true
+        binding.usernameTextView.text = message
+        binding.profileView.isVisible = true
         binding.editProfileButton.isVisible = false // No permitir editar si hay error
     }
 
     private fun handleProfileNotFoundError(userId: String) {
         Log.w(TAG, "Documento de usuario no encontrado para UID: $userId")
-        binding.textHome.text = "Perfil no encontrado. Completa tu perfil o contacta soporte."
-        binding.textHome.isVisible = true
+        binding.usernameTextView.text = "Perfil no encontrado. Completa tu perfil o contacta soporte."
+        binding.profileView.isVisible = true
         binding.editProfileButton.isVisible = false
         // Considera redirigir a ProfileSetupActivity si es necesario
         // val intent = Intent(activity, ProfileSetupActivity::class.java)
