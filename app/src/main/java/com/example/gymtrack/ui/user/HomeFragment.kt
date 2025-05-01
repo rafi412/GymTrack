@@ -320,7 +320,6 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
             }
         // ---------------------------------
     }
-    // ------------------------------------------
 
     // --- updateLocalProfile ACTUALIZADA ---
     private fun updateLocalProfile(updates: Map<String, Any?>) {
