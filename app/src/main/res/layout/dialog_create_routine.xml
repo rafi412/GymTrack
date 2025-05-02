@@ -51,15 +51,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:gravity="end"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:layout_gravity="end"
+        android:weightSum="3">
 
         <Button
             android:id="@+id/dialog_button_cancel"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="Cancelar" />
+            android:text="Cancelar"
+            android:layout_marginEnd="8dp" />
 
         <Button
             android:id="@+id/dialog_button_save"
@@ -67,6 +71,7 @@
             android:layout_height="wrap_content"
             android:text="Guardar" />
     </LinearLayout>
+
 
     <ProgressBar
         android:id="@+id/dialog_progress_bar"
