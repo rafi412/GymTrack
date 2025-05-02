@@ -60,41 +60,9 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
             return
         }
 
-        setupEditButtonListener()
-
         // Ocultar elementos hasta que carguen los datos
         binding.profileView.isVisible = false
-        binding.editProfileButton.isVisible = false
         loadUserProfile() // Carga los datos del perfil de Firestore
-    }
-
-    private fun setupEditButtonListener() {
-        binding.editProfileButton.setOnClickListener {
-            Log.d(TAG, "Edit button clicked")
-            // Usar el perfil cargado de Firestore (currentUserProfile)
-            currentUserProfile?.let { userProfile ->
-                // Calcular metas ANTES de abrir el diálogo, usando los datos del perfil
-                val calculatedGoals = MacronutrientCalculator.calculateGoals(
-                    age = userProfile.edad,
-                    sex = userProfile.sexo,
-                    weightKg = userProfile.peso,
-                    heightCm = userProfile.altura, // ASUME QUE userProfile.altura ESTÁ EN CM
-                    activityLevelKey = userProfile.nivelActividad ?: "MODERADO",
-                    goalKey = userProfile.objetivo ?: "MANTENER"
-                )
-                Log.d(TAG, "Metas calculadas para pasar al diálogo: $calculatedGoals")
-
-                // Crear y mostrar el diálogo, pasando el objeto User de Firestore
-                val dialogFragment = EditProfileDialogFragment.newInstance(userProfile, calculatedGoals)
-                Log.d(TAG, ">>> LLAMANDO a dialog.show() con ${parentFragmentManager}")
-                dialogFragment.setTargetFragment(this, 0)
-                dialogFragment.show(parentFragmentManager, "EditProfileDialog")
-
-            } ?: run {
-                Log.w(TAG, "currentUserProfile es null, no se puede abrir diálogo.")
-                Toast.makeText(context, "Datos del perfil aún no cargados.", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 
     private fun loadUserProfile() {
@@ -125,8 +93,6 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
                             displayUserData()
                             // 2. Calcular y mostrar/guardar metas (si los datos necesarios están)
                             calculateAndSetMacroGoals()
-                            // 3. Hacer visible el botón de editar
-                            binding.editProfileButton.isVisible = true
                         } else {
                             // Error al convertir el documento
                             handleProfileConversionError("Error al procesar datos del perfil.")
@@ -146,7 +112,6 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
                 // Mostrar error en el TextView principal
                 binding.usernameTextView.text = "Error al cargar el perfil: ${exception.message}"
                 binding.profileView.isVisible = true
-                binding.editProfileButton.isVisible = false // No permitir editar si falla la carga
                 Toast.makeText(context, "Error al cargar datos.", Toast.LENGTH_SHORT).show()
             }
     }
@@ -303,7 +268,7 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
             .addOnSuccessListener {
                 showProgressBar(false) // Ocultar al éxito
                 Log.d(TAG, "Perfil de usuario actualizado correctamente en Firestore.")
-                Toast.makeText(context, "Perfil actualizado", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Perfil actualizado desde homefragment", Toast.LENGTH_SHORT).show()
 
                 // --- Actualizar perfil local DESPUÉS de guardar en Firestore ---
                 // Pasamos el MISMO mapa 'updates' que se usó para Firestore
@@ -355,24 +320,21 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
         Log.w(TAG, message)
         binding.usernameTextView.text = message
         binding.profileView.isVisible = true
-        binding.editProfileButton.isVisible = false // No permitir editar si hay error
     }
 
     private fun handleProfileNotFoundError(userId: String) {
         Log.w(TAG, "Documento de usuario no encontrado para UID: $userId")
         binding.usernameTextView.text = "Perfil no encontrado. Completa tu perfil o contacta soporte."
         binding.profileView.isVisible = true
-        binding.editProfileButton.isVisible = false
         // Considera redirigir a ProfileSetupActivity si es necesario
         // val intent = Intent(activity, ProfileSetupActivity::class.java)
         // startActivity(intent)
     }
 
     // showProgressBar ahora solo toma boolean
-    private fun showProgressBar(isLoading: Boolean) {
+    fun showProgressBar(isLoading: Boolean) {
         binding.progressBarHome.isVisible = isLoading
         // Opcional: Deshabilitar botón editar mientras carga
-        binding.editProfileButton.isEnabled = !isLoading
     }
     // Eliminado hideProgressBar() ya que showProgressBar(false) hace lo mismo
 

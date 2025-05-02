@@ -42,7 +42,7 @@ class CreateRoutineDialogFragment : DialogFragment() {
         db = Firebase.firestore
         auth = Firebase.auth
 
-        // Obtener el listener (DashboardFragment)
+        // Obtener el listener (ExerciseFragment)
         try {
             listener = parentFragment as? RoutineCreationListener
         } catch (e: ClassCastException) {
@@ -117,7 +117,7 @@ class CreateRoutineDialogFragment : DialogFragment() {
                 Log.d(TAG, "Rutina '$routineName' creada con ID: $newRoutineId. Abriendo diálogo de días.")
 
                 // --- Llamada Corregida al Listener ---
-                // Notificar al DashboardFragment que la rutina se creó (para que refresque la lista)
+                // Notificar al ExerciseFragment que la rutina se creó (para que refresque la lista)
                 listener?.onRoutineCreatedOrUpdated(newRoutineId)
                 // ----------------------------------
 

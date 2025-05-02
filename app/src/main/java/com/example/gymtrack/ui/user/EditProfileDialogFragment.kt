@@ -130,15 +130,28 @@ class EditProfileDialogFragment : DialogFragment() {
             // --------------------------------
 
             if (listener != null) {
-                Log.d(TAG, "Listener ASIGNADO desde targetFragment a: ${listener!!::class.java.simpleName}")
+                Log.d(
+                    TAG,
+                    "Listener ASIGNADO desde targetFragment a: ${listener!!::class.java.simpleName}"
+                )
             } else {
                 // Fallback (menos probable que funcione si targetFragment se estableció)
-                Log.w(TAG, "targetFragment no es el listener o es null, intentando con parent/activity...")
-                listener = parentFragment as? ProfileEditListener ?: activity as? ProfileEditListener
+                Log.w(
+                    TAG,
+                    "targetFragment no es el listener o es null, intentando con parent/activity..."
+                )
+                listener =
+                    parentFragment as? ProfileEditListener ?: activity as? ProfileEditListener
                 if (listener != null) {
-                    Log.d(TAG, "Listener ASIGNADO desde parent/activity a: ${listener!!::class.java.simpleName}")
+                    Log.d(
+                        TAG,
+                        "Listener ASIGNADO desde parent/activity a: ${listener!!::class.java.simpleName}"
+                    )
                 } else {
-                    Log.e(TAG, "Listener NO ASIGNADO (target, parent, y activity fallaron o no implementan)")
+                    Log.e(
+                        TAG,
+                        "Listener NO ASIGNADO (target, parent, y activity fallaron o no implementan)"
+                    )
                 }
             }
         } catch (e: ClassCastException) {
@@ -263,14 +276,17 @@ class EditProfileDialogFragment : DialogFragment() {
         val pesoStr = binding.dialogEditTextPeso.text.toString().trim()
         val alturaCmStr = binding.dialogEditTextAltura.text.toString().trim()
         val sexo = binding.dialogEditTextSexo.text.toString().trim()
+        // Asumiendo que tienes variables miembro o locales para los seleccionados:
+        // val selectedObjetivoKey = ... // Obtenido del AutoCompleteTextView/Spinner
+        // val selectedActividadKey = ... // Obtenido del AutoCompleteTextView/Spinner
         val caloriasStr = binding.dialogEditTextCalorias.text.toString().trim()
         val proteinasStr = binding.dialogEditTextProteinas.text.toString().trim()
         val carbosStr = binding.dialogEditTextCarbos.text.toString().trim()
 
         var isValid = true
-        clearValidationErrors()
+        clearValidationErrors() // Asumo que tienes esta función para limpiar errores previos
 
-        // --- Validación (sin cambios funcionales, pero revisada) ---
+        // --- Validación (sin cambios funcionales) ---
         if (nombre.isEmpty()) {
             binding.dialogInputLayoutNombre.error = "Nombre obligatorio"; isValid = false
         }
@@ -290,12 +306,14 @@ class EditProfileDialogFragment : DialogFragment() {
             binding.dialogInputLayoutSexo.error = "Introduce 'Masculino' o 'Femenino'"; isValid =
                 false
         }
+        // Asegúrate que selectedObjetivoKey y selectedActividadKey se obtienen correctamente
         if (selectedObjetivoKey == null) {
-            binding.dialogInputLayoutObjetivo.error = "Selecciona un objetivo"; isValid = false
+            binding.dialogInputLayoutObjetivo?.error = "Selecciona un objetivo"; isValid =
+                false // Usa ?. si el layout es opcional
         }
         if (selectedActividadKey == null) {
-            binding.dialogInputLayoutNivelActividad.error =
-                "Selecciona un nivel de actividad"; isValid = false
+            binding.dialogInputLayoutNivelActividad?.error =
+                "Selecciona un nivel de actividad"; isValid = false // Usa ?.
         }
         val calorias = if (caloriasStr.isNotEmpty()) caloriasStr.toIntOrNull() else null
         if (calorias == null && caloriasStr.isNotEmpty()) {
@@ -317,29 +335,31 @@ class EditProfileDialogFragment : DialogFragment() {
             return
         }
 
-        // --- Crear mapa con los datos actualizados ---
-        val updatedData = hashMapOf<String, Any?>(
-            "nombre" to nombre,
-            "edad" to edad,
-            "peso" to peso,
-            "altura" to alturaCm, // Guardar CM
-            "sexo" to sexo.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() },
-            "objetivo" to selectedObjetivoKey,
-            "nivelActividad" to selectedActividadKey,
-            "caloriasDiarias" to calorias,
-            "proteinasDiarias" to proteinas,
-            "carboDiarios" to carbos
-        )
-
-        // --- Notificar al listener (HomeFragment) ---
-        Log.d(TAG, "Enviando datos actualizados al listener: $updatedData")
-        if (listener == null) {
-            Log.e(TAG, "¡ERROR CRÍTICO! Listener es null al intentar guardar.")
-            Toast.makeText(context, "Error interno al guardar (listener nulo)", Toast.LENGTH_LONG)
-                .show()
-            return // No continuar si no hay listener
+        // --- Crear Bundle con los datos actualizados ---
+        // Usamos Bundle directamente, que es lo que espera setFragmentResult
+        val resultBundle = Bundle().apply {
+            putString("updatedNombre", nombre) // Usa claves descriptivas para MainActivity
+            edad?.let { putInt("updatedEdad", it) } // Solo añade si no es null
+            peso?.let { putDouble("updatedPeso", it) }
+            alturaCm?.let { putDouble("updatedAltura", it) }
+            putString(
+                "updatedSexo",
+                sexo.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
+            selectedObjetivoKey?.let { putString("updatedObjetivo", it) }
+            selectedActividadKey?.let { putString("updatedNivelActividad", it) }
+            calorias?.let { putInt("updatedCalorias", it) }
+            proteinas?.let { putInt("updatedProteinas", it) }
+            carbos?.let { putInt("updatedCarbos", it) }
+            // Puedes añadir un flag si quieres indicar que el perfil se completó/modificó
+            putBoolean("profileWasUpdated", true)
         }
-        listener?.onProfileSaved(updatedData)
+
+        // --- Notificar a MainActivity usando Fragment Result API ---
+        Log.d(TAG, "Enviando resultado vía FragmentResult API: $resultBundle")
+        parentFragmentManager.setFragmentResult("profileUpdateResult", resultBundle)
+        // ---------------------------------------------------------
+
+        // Cerrar el diálogo
         dismiss()
     }
 

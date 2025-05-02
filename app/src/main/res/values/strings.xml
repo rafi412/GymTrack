@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">GymTrack</string>
     <string name="title_user">Usuario</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_exercise">Ejercicios</string>
     <string name="title_dieta">Dieta</string>
 
     <string-array name="objetivo_options">

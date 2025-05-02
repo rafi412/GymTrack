@@ -12,21 +12,6 @@
 
     <!-- Imagen de Perfil (Circular) -->
 
-    <ImageButton
-        android:id="@+id/editProfileButton"
-        android:layout_width="wrap_content"
-        android:layout_height="38dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="316dp"
-
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="8dp"
-        android:src="@drawable/baseline_mode_edit_24"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
-
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/profileImageView"
         android:layout_width="100dp"
@@ -35,7 +20,6 @@
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editProfileButton"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CircularImageView" />
     <!-- Placeholder image -->
 
@@ -246,19 +230,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="139dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center_vertical"
-        android:text="Editar perfil"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.262"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"

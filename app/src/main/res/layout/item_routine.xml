@@ -38,6 +38,20 @@
             tools:text="Enfoque en fuerza, 3 días" />
     </LinearLayout>
 
+    <!-- Botón de compartir -->
+    <ImageButton
+        android:id="@+id/buttonShareRoutine"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Compartir Rutina"
+        android:src="@drawable/baseline_share_24"
+        app:tint="?attr/colorControlNormal"
+        app:layout_constraintEnd_toStartOf="@+id/button_delete_routine_item"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    android:layout_marginEnd="8dp"/>
+
     <!-- Botón Eliminar -->
     <ImageButton
         android:id="@+id/button_delete_routine_item"
@@ -49,6 +63,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:srcCompat="@drawable/baseline_delete_24" /> <!-- Necesitas icono ic_delete -->
+        app:srcCompat="@drawable/baseline_delete_24" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

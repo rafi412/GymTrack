@@ -15,9 +15,9 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.gymtrack.ui.exercise.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard">
+        android:name="com.example.gymtrack.ui.exercise.ExerciseFragment"
+        android:label="@string/title_exercise"
+        tools:layout="@layout/fragment_exercise">
         <!-- ***** ACCIÓN AÑADIDA: Desde Dashboard a Crear Detalles ***** -->
         <action
             android:id="@+id/action_navigation_dashboard_to_createRoutineDetailsFragment"
