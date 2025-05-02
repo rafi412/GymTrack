@@ -1,13 +1,16 @@
 package com.example.gymtrack.ui.exercise // <-- ¡TU PAQUETE!
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -25,16 +28,22 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject // Para mapear documentos
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.gson.GsonBuilder
+import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.lang.StringBuilder
 
 // Modelo intermedio para la lógica de compartir (contiene días con sus ExerciseData)
@@ -42,6 +51,20 @@ data class RoutineDayDetail(
     val dayId: String,
     val dayName: String?,
     val exercises: List<ExerciseData>? = null // Lista de tu clase ExerciseData
+)
+
+data class SharedRoutine(
+    // Usa @SerializedName si quieres que el nombre en JSON sea diferente al de Kotlin
+    @SerializedName("routine_name") val routineName: String?,
+    @SerializedName("routine_description") val routineDescription: String?,
+    @SerializedName("days") val days: List<SharedRoutineDay>?
+)
+
+// Representa un día dentro de la rutina compartida
+data class SharedRoutineDay(
+    @SerializedName("day_name") val dayName: String?,
+    // No necesitamos el ID del día ni el orden del día para compartir/importar usualmente
+    @SerializedName("exercises") val exercises: List<ExerciseData>? // Reutiliza tu ExerciseData
 )
 
 class ExerciseFragment : Fragment() {
@@ -80,7 +103,7 @@ class ExerciseFragment : Fragment() {
             mutableListOf(), // Lista inicial vacía
             onItemClick = { clickedRoutine -> handleRoutineClick(clickedRoutine) }, // Navegar a detalles
             onDeleteClick = { routineToDelete -> showDeleteConfirmationDialog(routineToDelete) }, // Mostrar diálogo borrado
-            onShareClick = { routineToShare -> shareRoutineAsText(routineToShare) } // Iniciar lógica de compartir
+            onShareClick = { routineToShare -> shareRoutineAsJsonFile(routineToShare) } // Iniciar lógica de compartir
         )
         // -----------------------------------------------------------
         return binding.root
@@ -169,12 +192,12 @@ class ExerciseFragment : Fragment() {
                 }
 
                 // 2. Formatear el texto a compartir
-                val shareText = formatRoutineForSharing(routineInfo, fullRoutineDetails)
+                val shareText = formatRoutineToJson(routineInfo, fullRoutineDetails)
 
                 // 3. Lanzar el Intent de compartir en el hilo principal
                 withContext(Dispatchers.Main) {
                     showLoading(false)
-                    launchShareIntent(shareText)
+                    launchShareIntent(toString())
                 }
 
             } catch (e: Exception) {
@@ -195,77 +218,250 @@ class ExerciseFragment : Fragment() {
      * @return Lista de RoutineDayDetail (días con sus ejercicios) o null si hay error.
      */
     private suspend fun fetchFullRoutineDetails(routineId: String): List<RoutineDayDetail>? {
-        val userId = currentUser?.uid ?: return null
+        val userId = currentUser?.uid ?: run {
+            Log.e(TAG, "fetchFullRoutineDetails: Error - currentUser es null.")
+            return null // Salir si no hay usuario
+        }
         val daysList = mutableListOf<RoutineDayDetail>()
+        val routineDaysPath = "users/$userId/userRoutines/$routineId/routineDays" // Ruta base para días
+
         Log.d(TAG, "fetchFullRoutineDetails: Iniciando para rutina ID $routineId")
+        Log.d(TAG, "fetchFullRoutineDetails: Intentando leer días desde ruta: $routineDaysPath")
 
         try {
-            // Obtener documentos de días ordenados
-            val daysSnapshot = db.collection("users").document(userId)
-                .collection("userRoutines").document(routineId)
-                .collection("routineDays")
-                .orderBy("order", Query.Direction.ASCENDING) // ¡Necesitas campo 'order'!
-                .get().await()
+            // --- Consulta para obtener los DÍAS ---
+            val daysQuery = db.collection(routineDaysPath)
+                // Ordenar por el campo 'nombre' del día (asegúrate que existe y es consistente)
+                // Si prefieres ordenar por creación, usa 'createdAt' si lo tienes.
+                .orderBy("orden", Query.Direction.ASCENDING)
 
-            Log.d(TAG, "fetchFullRoutineDetails: ${daysSnapshot.size()} días encontrados.")
+            // Ejecutar la consulta para obtener los documentos de los días
+            val daysSnapshot = daysQuery.get().await() // Esperar resultado
 
-            // Iterar sobre cada día
+            Log.d(TAG, "fetchFullRoutineDetails: Consulta de días completada. Documentos encontrados: ${daysSnapshot.size()}")
+
+            // Verificar si se encontraron documentos de días
+            if (daysSnapshot.isEmpty) {
+                Log.w(TAG, "fetchFullRoutineDetails: No se encontraron documentos en la subcolección '$routineDaysPath'. Verifica la ruta y los datos en Firestore.")
+                // Devolver lista vacía en lugar de null si la rutina existe pero no tiene días
+                return daysList
+            }
+
+            // --- Iterar sobre cada DÍA encontrado ---
             for (dayDoc in daysSnapshot.documents) {
                 val dayId = dayDoc.id
-                // Usa el campo "nombre" para el nombre del día
-                val dayName = dayDoc.getString("nombre") ?: "Día ${dayDoc.getLong("order") ?: ""}"
-                val exercisesList = mutableListOf<ExerciseData>()
+                // Usar el campo "nombre" para el nombre del día. Proporcionar valor por defecto.
+                val dayName = dayDoc.getString("nombreDia") ?: "Día (ID: $dayId)" // Usa 'nombre'
+                val exercisesList = mutableListOf<ExerciseData>() // Lista para ejercicios de este día
+                val dayExercisesPath = "$routineDaysPath/$dayId/dayExercises" // Ruta a ejercicios
 
-                Log.d(
-                    TAG,
-                    "fetchFullRoutineDetails: Obteniendo ejercicios para día ID $dayId ($dayName)"
-                )
+                Log.d(TAG, "fetchFullRoutineDetails: Procesando día ID $dayId ('$dayName'). Obteniendo ejercicios desde: $dayExercisesPath")
 
-                // Obtener documentos de ejercicios para este día, ordenados
-                val exercisesSnapshot = dayDoc.reference.collection("dayExercises")
-                    .orderBy("order", Query.Direction.ASCENDING) // ¡Necesitas campo 'order'!
-                    .get().await()
+                try {
+                    // --- Consulta para obtener los EJERCICIOS de este día ---
+                    val exercisesQuery = db.collection(dayExercisesPath)
+                        // Ordenar por el campo 'orden' del ejercicio (asegúrate que existe)
+                        .orderBy("orden", Query.Direction.ASCENDING)
 
-                Log.d(
-                    TAG,
-                    "fetchFullRoutineDetails: ${exercisesSnapshot.size()} ejercicios encontrados para día $dayId."
-                )
+                    // Ejecutar la consulta para obtener los documentos de los ejercicios
+                    val exercisesSnapshot = exercisesQuery.get().await() // Esperar resultado
 
-                // Mapear cada documento de ejercicio a ExerciseData
-                for (exDoc in exercisesSnapshot.documents) {
-                    // ¡IMPORTANTE! Asegúrate que los nombres de campo en Firestore
-                    // coincidan con las propiedades de ExerciseData (name, muscleGroup, series, etc.)
-                    val exerciseData = exDoc.toObject<ExerciseData>()
-                    if (exerciseData != null) {
-                        exercisesList.add(exerciseData)
-                        Log.v(
-                            TAG,
-                            "fetchFullRoutineDetails: Ejercicio mapeado: ${exerciseData.name}"
-                        )
-                    } else {
-                        Log.w(
-                            TAG,
-                            "fetchFullRoutineDetails: No se pudo mapear ejercicio ID ${exDoc.id} a ExerciseData."
-                        )
-                    }
+                    Log.d(TAG, "fetchFullRoutineDetails: Consulta de ejercicios para día $dayId completada. Documentos encontrados: ${exercisesSnapshot.size()}")
+
+                    // --- Iterar sobre cada EJERCICIO encontrado ---
+                    for (exDoc in exercisesSnapshot.documents) {
+                        try {
+                            // Leer cada campo manualmente usando los nombres EXACTOS de Firestore
+                            val name = exDoc.getString("nombre") ?: "Ejercicio sin nombre"
+                            val muscleGroup = exDoc.getString("grupoMuscular") // Como en Firestore
+                            val series = exDoc.getLong("series")?.toInt() // Leer Long, convertir a Int?
+                            val reps = exDoc.getString("repeticiones") // Como en Firestore
+                            val rest = exDoc.getString("descanso") // Como en Firestore
+                            val notes = exDoc.getString("notas") // Como en Firestore
+                            val order = exDoc.getLong("orden")?.toInt() ?: 0 // Como en Firestore
+
+                            // Crear el objeto ExerciseData manualmente
+                            val exerciseData = ExerciseData(
+                                name = name,
+                                muscleGroup = muscleGroup,
+                                series = series,
+                                reps = reps,
+                                rest = rest,
+                                notes = notes,
+                                order = order
+                            )
+                            exercisesList.add(exerciseData)
+                            Log.v(TAG, "fetchFullRoutineDetails: Ejercicio añadido: ${exerciseData.name} (Orden: ${exerciseData.order})")
+
+                        } catch (e: Exception) {
+                            // Capturar error al leer/convertir campos de UN ejercicio
+                            Log.e(TAG, "Error al procesar datos del ejercicio ID ${exDoc.id} en día $dayId", e)
+                            // Continuar con el siguiente ejercicio si es posible
+                        }
+                    } // Fin del bucle de ejercicios
+
+                } catch (e: FirebaseFirestoreException) {
+                    // Capturar error específico al consultar EJERCICIOS (ej. permisos, índice)
+                    Log.e(TAG, "Error de Firestore al obtener ejercicios para día $dayId (Path: $dayExercisesPath)", e)
+                    Log.e(TAG, "Código de error: ${e.code}") // El código puede dar pistas
+                    // Podrías decidir continuar sin los ejercicios de este día o fallar todo
+                    // Por ahora, añadimos el día sin ejercicios si falla la subconsulta
+                    exercisesList.clear() // Asegurar que está vacía si hubo error
+                } catch (e: Exception) {
+                    // Capturar otros errores inesperados al consultar ejercicios
+                    Log.e(TAG, "Error inesperado al obtener ejercicios para día $dayId", e)
+                    exercisesList.clear()
                 }
-                // Añadir el día (con su nombre y lista de ExerciseData) a la lista resultado
+
+
+                // Añadir el día (con su nombre y la lista de ejercicios obtenida) a la lista principal
                 daysList.add(
                     RoutineDayDetail(
                         dayId = dayId,
                         dayName = dayName,
-                        exercises = exercisesList
+                        exercises = exercisesList // Añade la lista (puede estar vacía si hubo error)
                     )
                 )
-            }
-            Log.d(
-                TAG,
-                "fetchFullRoutineDetails: Finalizado. Total días con detalles: ${daysList.size}"
-            )
-            return daysList
+            } // Fin del bucle de días
+
+            Log.d(TAG, "fetchFullRoutineDetails: Finalizado. Total días procesados con detalles: ${daysList.size}")
+            return daysList // Devolver la lista completa
+
+        } catch (e: FirebaseFirestoreException) {
+            // Capturar error específico al consultar DÍAS (ej. permisos, índice)
+            Log.e(TAG, "Error de Firestore en fetchFullRoutineDetails para rutina $routineId (Path: $routineDaysPath)", e)
+            Log.e(TAG, "Código de error: ${e.code}") // Códigos: PERMISSION_DENIED, FAILED_PRECONDITION (índice), UNAVAILABLE, etc.
+            Toast.makeText(context, "Error al cargar días: ${e.code}", Toast.LENGTH_LONG).show() // Mostrar código al usuario (opcional)
+            return null // Devolver null si falla la consulta principal de días
         } catch (e: Exception) {
-            Log.e(TAG, "Error en fetchFullRoutineDetails para rutina $routineId", e)
-            return null // Devolver null en caso de error
+            // Capturar cualquier otro error inesperado
+            Log.e(TAG, "Error inesperado en fetchFullRoutineDetails para rutina $routineId", e)
+            return null // Devolver null en caso de error general
+        }
+    }
+
+    private fun shareRoutineAsJsonFile(routineInfo: RoutineViewData) { // Renombrado para claridad
+        Log.d(TAG, "Compartir rutina como ARCHIVO JSON solicitado: ${routineInfo.name} (ID: ${routineInfo.id})")
+        if (currentUser == null || context == null) { // Añadir chequeo de context
+            Toast.makeText(context ?: activity?.applicationContext, "Error: No se puede compartir ahora.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        showLoading(true)
+        CoroutineScope(Dispatchers.IO).launch { // Tareas de red y disco en IO
+            var jsonFileUri: Uri? = null // Variable para guardar el Uri del archivo
+            var errorMessage: String? = null // Para mensajes de error
+
+            try {
+                // 1. Obtener detalles completos
+                val fullRoutineDetails: List<RoutineDayDetail>? = fetchFullRoutineDetails(routineInfo.id)
+
+                if (fullRoutineDetails == null) {
+                    errorMessage = "No se pudieron cargar los detalles para compartir."
+                    return@launch // Salir de la coroutine interna
+                }
+
+                // 2. Formatear a JSON
+                val jsonStringToShare: String? = formatRoutineToJson(routineInfo, fullRoutineDetails)
+
+                if (jsonStringToShare == null) {
+                    errorMessage = "Error al generar formato para compartir."
+                    return@launch
+                }
+
+                // 3. Guardar JSON en archivo temporal
+                jsonFileUri = saveJsonToTempFile(requireContext(), routineInfo.name, jsonStringToShare)
+
+                if (jsonFileUri == null) {
+                    errorMessage = "Error al guardar el archivo temporal para compartir."
+                    return@launch
+                }
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Error inesperado durante el proceso de compartir como archivo JSON", e)
+                errorMessage = "Error al preparar el archivo para compartir."
+            } finally {
+                // Volver al hilo principal para actualizar UI (ocultar loading y lanzar Intent o mostrar error)
+                withContext(Dispatchers.Main) {
+                    showLoading(false)
+                    if (jsonFileUri != null) {
+                        // 4. Lanzar Intent para compartir el ARCHIVO
+                        launchShareFileIntent(jsonFileUri, routineInfo.name)
+                    } else {
+                        // Mostrar error si algo falló
+                        Toast.makeText(context, errorMessage ?: "Error desconocido al compartir.", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun saveJsonToTempFile(context: Context, routineName: String?, jsonContent: String): Uri? {
+        try {
+            // Crear un nombre de archivo seguro (reemplaza caracteres no válidos)
+            val safeRoutineName = routineName?.replace(Regex("[^a-zA-Z0-9_]"), "_")?.take(50) ?: "shared_routine"
+            val fileName = "${safeRoutineName}.json"
+
+            // Obtener el directorio para archivos caché de rutinas (definido en provider_paths.xml)
+            // Usamos cacheDir para archivos temporales que no necesitan persistir mucho tiempo
+            val cacheDir = File(context.cacheDir, "routines")
+            cacheDir.mkdirs() // Crear el directorio si no existe
+
+            val tempFile = File(cacheDir, fileName)
+
+            // Escribir el contenido JSON al archivo
+            FileOutputStream(tempFile).use { fos ->
+                fos.write(jsonContent.toByteArray())
+            }
+            Log.d(TAG, "Archivo JSON temporal guardado en: ${tempFile.absolutePath}")
+
+            // Obtener el Uri para el archivo usando FileProvider
+            // ¡¡ASEGÚRATE que la autoridad coincide con AndroidManifest.xml!!
+            val authority = "${context.packageName}.fileprovider"
+            val fileUri: Uri = FileProvider.getUriForFile(context, authority, tempFile)
+            Log.d(TAG, "Uri generado por FileProvider: $fileUri")
+            return fileUri
+
+        } catch (e: IOException) {
+            Log.e(TAG, "Error al guardar JSON en archivo temporal", e)
+            return null
+        } catch (e: IllegalArgumentException) {
+            Log.e(TAG, "Error al obtener Uri con FileProvider (¿autoridad mal configurada?)", e)
+            return null
+        }
+    }
+
+    /**
+     * Crea y lanza el Intent ACTION_SEND para compartir un archivo usando su Uri.
+     * @param fileUri El Uri del archivo a compartir (obtenido de FileProvider).
+     * @param routineName El nombre de la rutina (usado para el asunto opcional).
+     */
+    private fun launchShareFileIntent(fileUri: Uri, routineName: String?) {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            // Poner el Uri del archivo en EXTRA_STREAM
+            putExtra(Intent.EXTRA_STREAM, fileUri)
+            // Especificar el tipo MIME del archivo JSON
+            type = "application/json"
+            // Añadir permisos para que la app receptora pueda leer el Uri
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+            // Opcional: Añadir un asunto (útil para emails)
+            val subject = "Rutina GymTrack: ${routineName ?: "Compartida"}"
+            putExtra(Intent.EXTRA_SUBJECT, subject)
+
+            // Opcional: Añadir un texto corto que acompañe al archivo
+            // putExtra(Intent.EXTRA_TEXT, "Aquí tienes la rutina '$routineName' de GymTrack.")
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, "Compartir Archivo de Rutina Vía...")
+
+        try {
+            startActivity(shareIntent)
+            Log.d(TAG, "Intent de compartir archivo lanzado con éxito para Uri: $fileUri")
+        } catch (e: android.content.ActivityNotFoundException) {
+            Toast.makeText(requireContext(), "No se encontraron aplicaciones para compartir archivos.", Toast.LENGTH_SHORT).show()
+            Log.e(TAG, "No se encontró actividad para manejar ACTION_SEND con tipo application/json", e)
         }
     }
 
@@ -276,47 +472,37 @@ class ExerciseFragment : Fragment() {
      * @param daysDetails Lista de días, cada uno con su lista de ejercicios (ExerciseData).
      * @return El texto formateado listo para compartir.
      */
-    private fun formatRoutineForSharing(
-        routineInfo: RoutineViewData,
-        daysDetails: List<RoutineDayDetail>
-    ): String {
-        val builder = StringBuilder()
 
-        // Encabezado con nombre y descripción
-        builder.append("¡Échale un vistazo a mi rutina '${routineInfo.name}' de GymTrack!\n\n")
-        if (!routineInfo.description.isNullOrBlank()) { // Usar isNullOrBlank
-            builder.append("Descripción: ${routineInfo.description}\n\n")
-        }
-
-        // Contenido: Días y Ejercicios
-        if (daysDetails.isEmpty()) {
-            builder.append("Esta rutina aún no tiene días ni ejercicios definidos.")
-        } else {
-            daysDetails.forEach { day -> // day es RoutineDayDetail
-                builder.append("--- ${day.dayName ?: "Día"} ---\n") // Nombre del día
-                if (day.exercises.isNullOrEmpty()) {
-                    builder.append("(Sin ejercicios para este día)\n")
-                } else {
-                    day.exercises.forEachIndexed { index, exercise -> // exercise es ExerciseData
-                        builder.append("${index + 1}. ${exercise.name}\n") // Nombre ejercicio
-                        // Añadir detalles del ejercicio desde ExerciseData
-                        val sets = exercise.series ?: "?"
-                        val reps = exercise.reps ?: "?"
-                        val rest = exercise.rest ?: "-"
-                        builder.append("   - Series: $sets\n")
-                        builder.append("   - Repeticiones: $reps\n")
-                        if (rest != "-") builder.append("   - Descanso: $rest\n")
-                        if (!exercise.notes.isNullOrBlank()) builder.append("   - Notas: ${exercise.notes}\n")
-                    }
-                }
-                builder.append("\n") // Espacio entre días
+    private fun formatRoutineToJson(routineInfo: RoutineViewData, daysDetails: List<RoutineDayDetail>): String? {
+        Log.d(TAG, "formatRoutineToJson: Iniciando formato JSON para '${routineInfo.name}' con ${daysDetails.size} días.")
+        try {
+            // 1. Mapear RoutineDayDetail a SharedRoutineDay
+            val sharedDays = daysDetails.map { dayDetail ->
+                SharedRoutineDay(
+                    dayName = dayDetail.dayName, // Usa el nombre del día leído
+                    exercises = dayDetail.exercises // Pasa la lista de ExerciseData directamente
+                )
             }
+
+            // 2. Crear el objeto SharedRoutine principal
+            val sharedRoutineData = SharedRoutine(
+                routineName = routineInfo.name,
+                routineDescription = routineInfo.description,
+                days = sharedDays
+            )
+
+            // 3. Convertir el objeto a JSON usando Gson
+            // val gson = Gson() // Gson básico, JSON compacto
+            val gson = GsonBuilder().setPrettyPrinting().create() // Gson con formato legible (saltos de línea, indentación)
+
+            val jsonString = gson.toJson(sharedRoutineData)
+            Log.d(TAG, "formatRoutineToJson: JSON generado:\n$jsonString") // Loguear el JSON (puede ser largo)
+            return jsonString
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error al formatear rutina a JSON", e)
+            return null // Devolver null si falla la serialización
         }
-
-        // Pie de página
-        builder.append("\n¡Generado por GymTrack! 💪") // Tu firma :)
-
-        return builder.toString()
     }
 
     /**

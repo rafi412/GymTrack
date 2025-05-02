@@ -89,6 +89,8 @@ dependencies {
     //Serializacion de json
     implementation(libs.kotlinx.serialization.json)
 
-    implementation ("com.github.bumptech.glide:glide:4.15.1") // Usa la última versión estable
+    implementation ("com.github.bumptech.glide:glide:4.15.1")
+
+    implementation("com.google.code.gson:gson:2.10.1")// Usa la última versión estable
 
 }
