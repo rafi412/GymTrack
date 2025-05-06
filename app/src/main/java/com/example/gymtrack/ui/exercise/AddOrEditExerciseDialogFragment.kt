@@ -1,4 +1,4 @@
-package com.example.gymtrack.ui.routine_detail // O tu paquete
+package com.example.gymtrack.ui.routine_detail
 
 import android.os.Bundle
 import android.text.Editable
@@ -11,9 +11,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
-// Quita la importación de activityViewModels si no usas el ViewModel aquí
-// import androidx.fragment.app.activityViewModels
-import com.example.gymtrack.databinding.DialogAddEditExerciseBinding // Asegúrate que este es el nombre correcto del Binding
+import com.example.gymtrack.databinding.DialogAddEditExerciseBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -32,7 +30,6 @@ class AddOrEditExerciseDialogFragment : DialogFragment() {
 
     private var _binding: DialogAddEditExerciseBinding? = null
 
-    // Usar !! con precaución, asegurarse que solo se accede entre onCreateView y onDestroyView
     private val binding get() = _binding!!
 
     // Firebase
@@ -97,10 +94,8 @@ class AddOrEditExerciseDialogFragment : DialogFragment() {
         // Validar IDs esenciales
         if (routineId.isEmpty() || dayId.isEmpty()) {
             Log.e(TAG, "Error crítico: routineId o dayId vacíos en onCreate.")
-            // No llamar a dismiss aquí todavía, manejar en onViewCreated o save
         }
 
-        // Obtener listener (usando targetFragment es preferible si se establece)
         listener = targetFragment as? ExerciseUpdateListener
         if (listener == null) {
             // Fallback a parentFragment o activity si targetFragment no se usó/funcionó
@@ -345,4 +340,4 @@ class AddOrEditExerciseDialogFragment : DialogFragment() {
         super.onDestroyView() // Llamada a super
         _binding = null // Limpiar binding
     }
-} // Fin de la clase AddOrEditExerciseDialogFragment
+}

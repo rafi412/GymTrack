@@ -1,4 +1,4 @@
-package com.example.gymtrack.ui.exercise // O tu paquete
+package com.example.gymtrack.ui.exercise
 
 import android.view.LayoutInflater
 import android.view.View

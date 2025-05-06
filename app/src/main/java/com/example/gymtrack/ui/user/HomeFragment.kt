@@ -1,8 +1,6 @@
 package com.example.gymtrack.ui.user
 
-// Importa tu clase User (asegúrate que la ruta es correcta)
 import User
-// Importa tu clase de cálculo (asegúrate que la ruta es correcta)
 import android.content.Intent // Necesario para LoginActivity
 import android.os.Bundle
 import android.util.Log
@@ -15,7 +13,6 @@ import androidx.fragment.app.Fragment
 import com.example.gymtrack.LoginActivity // Necesario para redirigir
 import com.example.gymtrack.R
 import com.example.gymtrack.databinding.FragmentHomeBinding
-// Importa el DialogFragment y su Listener (asegúrate que las rutas son correctas)
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser // Importar FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -25,8 +22,8 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.bumptech.glide.Glide // <-- Importa Glide
 
-// Implementa la interfaz del DialogFragment
-class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz correcta
+
+class HomeFragment : Fragment(), ProfileEditListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -116,7 +113,6 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
             }
     }
 
-// ... dentro de tu Fragment o Activity
 
     private fun displayUserData() {
         val user = currentUserProfile // Tu objeto de perfil personalizado de Firestore
@@ -124,27 +120,29 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
 
         if (user != null && firebaseUser != null) { // Verifica ambos usuarios
             Log.d(TAG, "Mostrando datos del usuario: $user")
-            Log.d(TAG, "Usuario de Firebase Auth: ${firebaseUser.uid}, Email: ${firebaseUser.email}, PhotoURL: ${firebaseUser.photoUrl}")
+            Log.d(
+                TAG,
+                "Usuario de Firebase Auth: ${firebaseUser.uid}, Email: ${firebaseUser.email}, PhotoURL: ${firebaseUser.photoUrl}"
+            )
 
             // --- Cargar Imagen de Perfil de Google ---
             val photoUri = firebaseUser.photoUrl // Obtiene la Uri de la foto
             if (photoUri != null) {
                 Log.d(TAG, "Cargando foto de perfil desde URL: $photoUri")
-                Glide.with(this) // 'this' si estás en un Fragment o Activity
+                Glide.with(this)
                     .load(photoUri) // Carga la Uri directamente
                     .error(R.drawable.ic_user_24dp) // Imagen si hay error (opcional)
-                    // .circleCrop() // Opcional: si tu ImageView no es ShapeableImageView o no está configurada como círculo en XML
                     .into(binding.profileImageView) // El ImageView destino
             } else {
                 // Si no hay URL de foto, muestra el placeholder
                 Log.d(TAG, "El usuario no tiene foto de perfil en Firebase Auth.")
                 binding.profileImageView.setImageResource(R.drawable.ic_user_24dp)
             }
-            // --- Fin Cargar Imagen de Perfil ---
 
-            // --- Rellenar los TextViews (como en la respuesta anterior) ---
-            binding.usernameTextView.text = "Bienvenido, ${user.nombre?.takeIf { it.isNotBlank() } ?: firebaseUser.displayName ?: "Usuario"}!" // Puedes usar displayName de Firebase como fallback
-            binding.emailTextView.text = firebaseUser.email ?: "N/A" // Mejor obtener el email de firebaseUser
+            binding.usernameTextView.text =
+                "Bienvenido, ${user.nombre?.takeIf { it.isNotBlank() } ?: firebaseUser.displayName ?: "Usuario"}!" // Puedes usar displayName de Firebase como fallback
+            binding.emailTextView.text =
+                firebaseUser.email ?: "N/A" // Mejor obtener el email de firebaseUser
             binding.ageTextView.text = user.edad?.toString()?.takeIf { it.isNotBlank() }
                 ?.let { "$it años" } ?: "N/A"
             binding.weightTextView.text = user.peso?.toString()?.takeIf { it.isNotBlank() }
@@ -153,8 +151,6 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
                 ?.let { "$it cm" } ?: "N/A"
             binding.sexTextView.text = user.sexo?.takeIf { it.isNotBlank() } ?: "N/A"
             binding.objectiveTextView.text = user.objetivo?.takeIf { it.isNotBlank() } ?: "N/A"
-            // Asegúrate de tener activityLevelTextView en tu XML si lo usas
-            // --- Fin Rellenar TextViews ---
 
         } else {
             Log.w(TAG, "Intento de mostrar datos con currentUserProfile o firebaseUser null")
@@ -192,7 +188,10 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
 
         // Validar que tenemos los datos necesarios ANTES de calcular
         if (age == null || sex == null || weightKg == null || heightCm == null || activityLevel == null || goal == null) {
-            Log.w("MacroGoals", "Faltan datos en el perfil para calcular macros (edad, sexo, peso, altura, actividad, objetivo).")
+            Log.w(
+                "MacroGoals",
+                "Faltan datos en el perfil para calcular macros (edad, sexo, peso, altura, actividad, objetivo)."
+            )
             binding.usernameTextView.append("\n\nMetas Diarias: Completa tu perfil (edad, sexo, peso, altura, actividad, objetivo) para calcular.")
             return
         }
@@ -204,17 +203,17 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
         )
 
         if (calculatedGoals != null) {
-            Log.i("MacroGoals", "Metas Calculadas: C:${calculatedGoals.calories}, P:${calculatedGoals.proteinGrams}, C:${calculatedGoals.carbGrams}")
-            Toast.makeText(context, "Metas diarias calculadas", Toast.LENGTH_SHORT).show()
+            Log.i(
+                "MacroGoals",
+                "Metas Calculadas: C:${calculatedGoals.calories}, P:${calculatedGoals.proteinGrams}, C:${calculatedGoals.carbGrams}"
+            )
 
             // --- ACTUALIZAR currentUserProfile CON METAS CALCULADAS ---
-            // Esto es opcional si no necesitas los valores calculados en el objeto local
-            // currentUserProfile = currentUserProfile?.copy(
-            //     caloriasDiarias = calculatedGoals.calories,
-            //     proteinasDiarias = calculatedGoals.proteinGrams,
-            //     carboDiarios = calculatedGoals.carbGrams
-            // )
-            // -------------------------------------------------------
+             currentUserProfile = currentUserProfile?.copy(
+                 caloriasDiarias = calculatedGoals.calories,
+                 proteinasDiarias = calculatedGoals.proteinGrams,
+                 carboDiarios = calculatedGoals.carbGrams
+             )
 
             // --- AÑADIR METAS AL TEXTVIEW EXISTENTE ---
             // ---------------------------------------------------
@@ -228,12 +227,26 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
                 // Podrías añadir "grasasDiaras" si tienes ese campo
             )
             userDocRef.update(metaUpdates)
-                .addOnSuccessListener { Log.d("MacroGoals", "Metas calculadas guardadas en Firestore.") }
-                .addOnFailureListener { e -> Log.e("MacroGoals", "Error al guardar metas calculadas", e) }
+                .addOnSuccessListener {
+                    Log.d(
+                        "MacroGoals",
+                        "Metas calculadas guardadas en Firestore."
+                    )
+                }
+                .addOnFailureListener { e ->
+                    Log.e(
+                        "MacroGoals",
+                        "Error al guardar metas calculadas",
+                        e
+                    )
+                }
             // ----------------------------------------------------
 
         } else {
-            Log.e("MacroGoals", "El cálculo de metas falló (devolvió null). Revisa logs de MacroCalc.")
+            Log.e(
+                "MacroGoals",
+                "El cálculo de metas falló (devolvió null). Revisa logs de MacroCalc."
+            )
             Toast.makeText(context, "No se pudieron calcular las metas.", Toast.LENGTH_SHORT).show()
             binding.usernameTextView.append("\n\nMetas Diarias: No se pudieron calcular.")
         }
@@ -254,24 +267,20 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
             return
         }
 
-        // --- ¡¡LOG CLAVE AQUÍ!! ---
-        // Imprime el mapa EXACTO que recibes del diálogo ANTES de hacer nada más
         Log.d(TAG, "updateFirestoreProfile RECIBIENDO: $updates")
-        // --------------------------
 
         showProgressBar(true) // Mostrar progreso mientras guarda
         val userRef = db.collection("users").document(userId)
 
         // --- OPERACIÓN DE ACTUALIZACIÓN ---
-        // ¿Estás pasando el mapa 'updates' DIRECTAMENTE a userRef.update()?
-        userRef.update(updates) // <-- ¿Es realmente así? ¿O estás creando un NUEVO mapa aquí?
+        userRef.update(updates)
             .addOnSuccessListener {
                 showProgressBar(false) // Ocultar al éxito
                 Log.d(TAG, "Perfil de usuario actualizado correctamente en Firestore.")
-                Toast.makeText(context, "Perfil actualizado desde homefragment", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Perfil actualizado desde homefragment", Toast.LENGTH_SHORT)
+                    .show()
 
                 // --- Actualizar perfil local DESPUÉS de guardar en Firestore ---
-                // Pasamos el MISMO mapa 'updates' que se usó para Firestore
                 updateLocalProfile(updates)
 
                 // --- Recalcular y mostrar/guardar metas AHORA ---
@@ -288,9 +297,6 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
 
     // --- updateLocalProfile ACTUALIZADA ---
     private fun updateLocalProfile(updates: Map<String, Any?>) {
-        // Actualiza el objeto local 'currentUserProfile' con los datos que
-        // ACABAN de ser guardados exitosamente en Firestore.
-        // Asegúrate que los tipos coinciden con lo que guardaste.
         currentUserProfile = currentUserProfile?.copy(
             nombre = updates["nombre"] as? String ?: currentUserProfile?.nombre,
             // Firestore devuelve números enteros como Long, castear a Int si es necesario
@@ -299,12 +305,11 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
             altura = updates["altura"] as? Double ?: currentUserProfile?.altura, // Asume CM
             sexo = updates["sexo"] as? String ?: currentUserProfile?.sexo,
             objetivo = updates["objetivo"] as? String ?: currentUserProfile?.objetivo,
-            nivelActividad = updates["nivelActividad"] as? String ?: currentUserProfile?.nivelActividad
-            // NO actualizamos los macros aquí, se hará en calculateAndSetMacroGoals si se guardan
+            nivelActividad = updates["nivelActividad"] as? String
+                ?: currentUserProfile?.nivelActividad
         )
         Log.d(TAG, "Perfil local (básico) actualizado: $currentUserProfile")
     }
-    // ------------------------------------
 
     // --- Funciones de manejo de errores y UI ---
     private fun handleUserNotLoggedIn() {
@@ -324,9 +329,9 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
 
     private fun handleProfileNotFoundError(userId: String) {
         Log.w(TAG, "Documento de usuario no encontrado para UID: $userId")
-        binding.usernameTextView.text = "Perfil no encontrado. Completa tu perfil o contacta soporte."
+        binding.usernameTextView.text =
+            "Perfil no encontrado. Completa tu perfil o contacta soporte."
         binding.profileView.isVisible = true
-        // Considera redirigir a ProfileSetupActivity si es necesario
         // val intent = Intent(activity, ProfileSetupActivity::class.java)
         // startActivity(intent)
     }
@@ -336,7 +341,6 @@ class HomeFragment : Fragment(), ProfileEditListener { // Implementa la interfaz
         binding.progressBarHome.isVisible = isLoading
         // Opcional: Deshabilitar botón editar mientras carga
     }
-    // Eliminado hideProgressBar() ya que showProgressBar(false) hace lo mismo
 
     override fun onDestroyView() {
         super.onDestroyView()

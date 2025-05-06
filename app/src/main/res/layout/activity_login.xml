@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp"
-    tools:context="com.example.gymtrack.login.LoginActivity"> <!-- Reemplaza con el nombre de tu paquete si es diferente -->
+    tools:context="com.example.gymtrack.login.LoginActivity">
 
     <TextView
         android:id="@+id/textViewLoginTitle"
@@ -83,7 +83,6 @@
         app:layout_constraintTop_toBottomOf="@id/textViewOr"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-    <!-- app:buttonSize="wide" es una opción para hacerlo más ancho -->
 
     <Button
         android:id="@+id/buttonGoToRegister"
@@ -106,6 +105,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:visibility="visible"/> <!-- tools:visibility para verlo en el preview -->
+        tools:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

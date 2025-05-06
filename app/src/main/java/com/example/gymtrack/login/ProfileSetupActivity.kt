@@ -1,7 +1,4 @@
-package com.example.gymtrack.login // O tu paquete
-
-// Quita la importación de User si no la usas directamente aquí
-// import User
+package com.example.gymtrack.login
 import User
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -76,9 +73,7 @@ class ProfileSetupActivity : AppCompatActivity() {
 
     private fun setupObjetivoDropdown() {
         // Obtener las opciones desde el array de strings
-        // Asegúrate de que R.array.objetivo_options existe en tu strings.xml
         val objetivos = resources.getStringArray(R.array.objetivo_options)
-        // Crear un ArrayAdapter
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, objetivos)
 
         // Referenciar el AutoCompleteTextView usando el binding y el ID correcto
@@ -100,7 +95,6 @@ class ProfileSetupActivity : AppCompatActivity() {
     private fun setupActividadDropdown() {
         try { // Añadir try-catch para depurar errores de recursos
             // 1. Obtener las opciones desde el array de strings
-            // VERIFICA QUE R.array.nivel_actividad_options EXISTE Y TIENE ITEMS
             val niveles = resources.getStringArray(R.array.nivel_actividad_options)
             if (niveles.isEmpty()) {
                 Log.e(TAG, "El array 'nivel_actividad_options' está vacío o no se encontró.")
@@ -112,21 +106,16 @@ class ProfileSetupActivity : AppCompatActivity() {
             // 2. Crear un ArrayAdapter
             val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, niveles)
 
-            // 3. Referenciar el AutoCompleteTextView usando el binding y el ID CORRECTO
-            // VERIFICA QUE EL ID EN TU XML ES 'auto_complete_nivel_actividad'
+            // 3. Referenciar el AutoCompleteTextView
             val autoCompleteTextView = binding.autoCompleteNivelActividad
 
             // 4. Asignar el adapter
             autoCompleteTextView.setAdapter(adapter)
             Log.d(TAG, "Adapter asignado a autoCompleteNivelActividad")
 
-            // 5. Pre-seleccionar valor (esto se hace en loadExistingData si ya hay datos)
-            // Lo movemos a loadExistingData para asegurar que se haga después de cargar
-
             // 6. Listener para actualizar la clave seleccionada
             autoCompleteTextView.setOnItemClickListener { parent, _, position, _ ->
                 val selectedText = parent.getItemAtPosition(position) as String
-                // Usa el mapa 'actividadMap' que DEBES definir en tu Activity/Fragment
                 selectedActividadKey = actividadMap[selectedText]
                 binding.inputLayoutNivelActividad.error = null // Limpiar error si lo había
                 Log.d(TAG, "Nivel actividad seleccionado: $selectedText (Clave: $selectedActividadKey)")
@@ -157,7 +146,6 @@ class ProfileSetupActivity : AppCompatActivity() {
                     val user = document.toObject<User>()
                     if (user != null) {
                         binding.editTextNombreSetup.setText(user.nombre ?: currentUser?.displayName ?: "")
-                        // Asumiendo que tienes un campo 'username' en tu User data class y Firestore
                         binding.editTextUserNameSetup.setText(user.username ?: "")
                         user.edad?.let { binding.editTextEdadSetup.setText(it.toString()) }
                         // Asumiendo altura en CM (Long)
@@ -288,7 +276,7 @@ class ProfileSetupActivity : AppCompatActivity() {
         val userId = user.uid
         val userProfileData = hashMapOf<String, Any?>(
             "nombre" to nombre,
-            "username" to username, // Asegúrate que existe en Firestore/User.kt
+            "username" to username,
             "edad" to edad,         // Guardar Int
             "altura" to alturaCm,   // Guardar Double (o Int) para cm
             "peso" to peso,
@@ -297,9 +285,6 @@ class ProfileSetupActivity : AppCompatActivity() {
             "nivelActividad" to selectedActividadKey,
             "email" to user.email,
             "profileCompleted" to true,
-            // Añade nivelActividad si lo pides en esta pantalla
-            // Añade metas calculadas si las calculas aquí
-            // "caloriasMeta" to ...,
         )
 
         showProgressBar()

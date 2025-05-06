@@ -20,74 +20,127 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/dialog_ex_input_name" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp" android:hint="Nombre del Ejercicio">
+            android:id="@+id/dialog_ex_input_name"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="Nombre del Ejercicio">
+
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/dialog_ex_edit_name" android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:inputType="textCapWords"/>
+                android:id="@+id/dialog_ex_edit_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/dialog_ex_input_group" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp" android:hint="Grupo Muscular (Opcional)">
+            android:id="@+id/dialog_ex_input_group"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="Grupo Muscular (Opcional)">
+
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/dialog_ex_edit_group" android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:inputType="textCapWords"/>
+                android:id="@+id/dialog_ex_edit_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:baselineAligned="false">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/dialog_ex_input_series" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:layout_marginEnd="4dp"
-                android:layout_marginBottom="8dp" android:hint="Series">
+                android:id="@+id/dialog_ex_input_series"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:hint="Series">
+
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/dialog_ex_edit_series" android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:inputType="number"/>
+                    android:id="@+id/dialog_ex_edit_series"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/dialog_ex_input_reps" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:layout_marginStart="4dp"
-                android:layout_marginBottom="8dp" android:hint="Reps (Ej: 8-12)">
+                android:id="@+id/dialog_ex_input_reps"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:hint="Reps (Ej: 8-12)">
+
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/dialog_ex_edit_reps" android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:inputType="text"/>
+                    android:id="@+id/dialog_ex_edit_reps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/dialog_ex_input_rest" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp" android:hint="Descanso (Ej: 60s)">
+            android:id="@+id/dialog_ex_input_rest"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="Descanso (Ej: 60s)">
+
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/dialog_ex_edit_rest" android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:inputType="text"/>
+                android:id="@+id/dialog_ex_edit_rest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/dialog_ex_input_notes" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" android:hint="Notas (Opcional)">
+            android:id="@+id/dialog_ex_input_notes"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Notas (Opcional)">
+
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/dialog_ex_edit_notes" android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:inputType="textMultiLine|textCapSentences"
-                android:minLines="2"/>
+                android:id="@+id/dialog_ex_edit_notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minLines="2" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Botones -->
         <LinearLayout
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:gravity="end" android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="horizontal">
+
             <Button
-                android:id="@+id/dialog_ex_button_cancel" style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp" android:text="Cancelar" />
+                android:id="@+id/dialog_ex_button_cancel"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Cancelar" />
+
             <Button
-                android:id="@+id/dialog_ex_button_add" android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:text="Añadir Ejercicio" />
+                android:id="@+id/dialog_ex_button_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Añadir Ejercicio" />
         </LinearLayout>
 
     </LinearLayout>

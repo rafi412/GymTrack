@@ -1,5 +1,4 @@
-package com.example.gymtrack.ui.diet // O tu paquete
-
+package com.example.gymtrack.ui.diet
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,10 +19,6 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.SerializationException
 
-
-// Ya no necesitamos un listener específico si el ViewModel maneja todo
-// interface MealAdditionListener { ... }
-
 class AddMealDialogFragment : DialogFragment() {
 
     private var _binding: DialogAddMealBinding? = null
@@ -36,7 +31,6 @@ class AddMealDialogFragment : DialogFragment() {
     private var selectedMealTitle: String? = null
     private val TAG = "AddMealDialog"
 
-    // Parser JSON para la respuesta de IA (si el parseo se hace aquí)
     private val jsonParser = Json { ignoreUnknownKeys = true; isLenient = true }
 
     companion object {
@@ -50,10 +44,13 @@ class AddMealDialogFragment : DialogFragment() {
         super.onCreate(savedInstanceState)
         initializeGenerativeModel()
         Log.d(TAG, ">>> AddMealDialogFragment onCreate FIN") // LOG FIN onCreate (¿llega aquí?)
-        // ... resto de onCreate ...
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         Log.d(TAG, "onCreateView - Intentando inflar DialogAddMealBinding...")
         Log.d(TAG, "  -> Inflater: $inflater")
         Log.d(TAG, "  -> Container: $container")
@@ -72,13 +69,14 @@ class AddMealDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupMealTitleDropdown()
         setupButtons()
-        // No necesitamos observar aquí si el ViewModel no nos devuelve la estimación directamente
-        // observeViewModel()
     }
 
     override fun onStart() {
         super.onStart()
-        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     }
 
@@ -96,14 +94,14 @@ class AddMealDialogFragment : DialogFragment() {
             Log.d(TAG, "GenerativeModel inicializado con éxito.") // LOG ÉXITO Init
         } catch (e: Exception) {
             isGeminiInitialized = false
-            Log.e(TAG, ">>> ERROR en initializeGenerativeModel", e) // LOG ERROR Init
-            // Considera NO lanzar Toast aquí, puede ser muy temprano
+            Log.e(TAG, ">>> ERROR en initializeGenerativeModel", e) // LOG ERROR
         }
     }
 
     private fun setupMealTitleDropdown() {
         val titles = resources.getStringArray(R.array.meal_title_options)
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, titles)
+        val adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, titles)
         binding.autoCompleteMealTitle.setAdapter(adapter)
         binding.autoCompleteMealTitle.setOnItemClickListener { parent, _, position, _ ->
             selectedMealTitle = parent.getItemAtPosition(position) as String
@@ -115,7 +113,8 @@ class AddMealDialogFragment : DialogFragment() {
         binding.dialogMealButtonCancel.setOnClickListener { dismiss() }
 
         // Botón Estimar Macros
-        binding.buttonEstimateMacros.isEnabled = isGeminiInitialized // Habilitar solo si IA está lista
+        binding.buttonEstimateMacros.isEnabled =
+            isGeminiInitialized // Habilitar solo si IA está lista
         binding.buttonEstimateMacros.setOnClickListener {
             val description = binding.editTextMealDescription.text.toString().trim()
             if (description.isNotEmpty()) {
@@ -127,7 +126,7 @@ class AddMealDialogFragment : DialogFragment() {
 
         // Botón Añadir Comida
         binding.dialogMealButtonAdd.setOnClickListener {
-            addMealToJournal() // Llama a la función que valida y guarda
+            addMealToJournal()
         }
     }
 
@@ -152,7 +151,8 @@ class AddMealDialogFragment : DialogFragment() {
                 if (jsonResponse != null) {
                     parseAndPopulateFields(jsonResponse) // Parsea y rellena los EditText
                 } else {
-                    Toast.makeText(context, "La IA no devolvió respuesta.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "La IA no devolvió respuesta.", Toast.LENGTH_SHORT)
+                        .show()
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error llamando a Gemini", e)
@@ -167,7 +167,8 @@ class AddMealDialogFragment : DialogFragment() {
     // --- Parsea la respuesta y rellena los EditText ---
     private fun parseAndPopulateFields(jsonString: String) {
         try {
-            val cleanJson = jsonString.trim().removeSurrounding("```json\n", "\n```").removeSurrounding("```", "```")
+            val cleanJson = jsonString.trim().removeSurrounding("```json\n", "\n```")
+                .removeSurrounding("```", "```")
             val estimate = jsonParser.decodeFromString<MacroEstimate>(cleanJson) // Usa DTO
             Log.d(TAG, "Macros parseados: $estimate")
 
@@ -176,7 +177,8 @@ class AddMealDialogFragment : DialogFragment() {
             binding.editTextMealProtein.setText(estimate.proteinGrams?.toString() ?: "")
             binding.editTextMealCarbs.setText(estimate.carbGrams?.toString() ?: "")
 
-            Toast.makeText(context, "Macros estimados. Puedes ajustarlos.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Macros estimados. Puedes ajustarlos.", Toast.LENGTH_SHORT)
+                .show()
 
         } catch (e: SerializationException) {
             Log.e(TAG, "Error al parsear JSON de Gemini: ${e.message}")
@@ -194,24 +196,31 @@ class AddMealDialogFragment : DialogFragment() {
     private fun addMealToJournal() {
         val title = selectedMealTitle
         val description = binding.editTextMealDescription.text.toString().trim()
-        // --- Leer valores FINALES de los EditText ---
         val caloriesStr = binding.editTextMealCalories.text.toString().trim()
         val proteinStr = binding.editTextMealProtein.text.toString().trim()
         val carbsStr = binding.editTextMealCarbs.text.toString().trim()
         // ------------------------------------------
 
-        // --- Validación (igual que antes) ---
         var isValid = true
         clearValidationErrors() // Limpiar errores previos
-        if (title.isNullOrBlank()) { binding.inputLayoutMealTitle.error = "Selecciona un tipo"; isValid = false }
+        if (title.isNullOrBlank()) {
+            binding.inputLayoutMealTitle.error = "Selecciona un tipo"; isValid = false
+        }
         val calories = caloriesStr.toIntOrNull()
-        if (calories == null && caloriesStr.isNotEmpty() || (calories !=null && calories < 0)) { binding.inputLayoutMealCalories.error = "Inválido"; isValid = false }
+        if (calories == null && caloriesStr.isNotEmpty() || (calories != null && calories < 0)) {
+            binding.inputLayoutMealCalories.error = "Inválido"; isValid = false
+        }
         val protein = proteinStr.toIntOrNull()
-        if (protein == null && proteinStr.isNotEmpty() || (protein !=null && protein < 0)) { binding.inputLayoutMealProtein.error = "Inválido"; isValid = false }
+        if (protein == null && proteinStr.isNotEmpty() || (protein != null && protein < 0)) {
+            binding.inputLayoutMealProtein.error = "Inválido"; isValid = false
+        }
         val carbs = carbsStr.toIntOrNull()
-        if (carbs == null && carbsStr.isNotEmpty() || (carbs !=null && carbs < 0)) { binding.inputLayoutMealCarbs.error = "Inválido"; isValid = false }
+        if (carbs == null && carbsStr.isNotEmpty() || (carbs != null && carbs < 0)) {
+            binding.inputLayoutMealCarbs.error = "Inválido"; isValid = false
+        }
         if ((calories ?: 0) <= 0 && (protein ?: 0) <= 0 && (carbs ?: 0) <= 0) {
-            Toast.makeText(context, "Introduce al menos un valor nutricional.", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Introduce al menos un valor nutricional.", Toast.LENGTH_LONG)
+                .show()
             isValid = false
         }
         if (!isValid) return
@@ -235,10 +244,11 @@ class AddMealDialogFragment : DialogFragment() {
     // Muestra/oculta loading específico para la IA
     private fun showLoading(isLoading: Boolean) {
         binding.dialogMealProgressBar.isVisible = isLoading
-        binding.buttonEstimateMacros.isEnabled = !isLoading && isGeminiInitialized // Habilitar/Deshabilitar
-        binding.dialogMealButtonAdd.isEnabled = !isLoading // Deshabilitar añadir mientras estima/guarda
+        binding.buttonEstimateMacros.isEnabled =
+            !isLoading && isGeminiInitialized // Habilitar/Deshabilitar
+        binding.dialogMealButtonAdd.isEnabled =
+            !isLoading // Deshabilitar añadir mientras estima/guarda
         binding.dialogMealButtonCancel.isEnabled = !isLoading
-        // Puedes deshabilitar también los EditText si lo deseas
         // binding.editTextMealDescription.isEnabled = !isLoading
         // binding.editTextMealCalories.isEnabled = !isLoading ... etc
     }

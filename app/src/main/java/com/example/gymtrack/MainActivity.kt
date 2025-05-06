@@ -92,7 +92,6 @@ class MainActivity : AppCompatActivity() {
         bottomNavView.setupWithNavController(navController)
         Log.d(TAG, "Controles de navegación configurados.")
 
-        // Configura el listener para recibir resultados del diálogo
         setupProfileUpdateListener()
 
         fetchUserProfileData()
@@ -117,9 +116,8 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.edit_profile -> {
-                    // --- ¡LÓGICA DE HomeFragment MOVIDA AQUÍ! ---
                     Log.d(TAG, "'Editar Perfil' seleccionado en el drawer.")
-                    currentUserProfile?.let { userProfile -> // Usar let para seguridad con null
+                    currentUserProfile?.let { userProfile ->
                         Log.d(
                             TAG,
                             "currentUserProfile no es null, procediendo a calcular metas y abrir diálogo."
@@ -130,7 +128,7 @@ class MainActivity : AppCompatActivity() {
                                 age = userProfile.edad, // Acceso seguro dentro de let
                                 sex = userProfile.sexo,
                                 weightKg = userProfile.peso,
-                                heightCm = userProfile.altura, // Asegúrate que la unidad es correcta (cm)
+                                heightCm = userProfile.altura,
                                 activityLevelKey = userProfile.nivelActividad
                                     ?: "MODERADO", // Valor por defecto si es null
                                 goalKey = userProfile.objetivo
@@ -146,8 +144,6 @@ class MainActivity : AppCompatActivity() {
                                 "Mostrando EditProfileDialog desde MainActivity usando supportFragmentManager"
                             )
 
-                            // --- MOSTRAR EL DIÁLOGO USANDO supportFragmentManager ---
-                            // --- NO USAR setTargetFragment ---
                             dialogFragment.show(supportFragmentManager, "EditProfileDialog")
 
                         } catch (e: Exception) {
@@ -170,7 +166,6 @@ class MainActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                    // Ya está manejado
                 }
 
                 else -> {
@@ -196,7 +191,6 @@ class MainActivity : AppCompatActivity() {
     }
     // -------------------------------------------------
 
-    // --- Función para Guardar en Firestore (Ejemplo, necesitas implementarla) ---
     private fun saveProfileUpdatesToFirestore(updatedDataBundle: Bundle) {
         val userId = firebaseAuth.currentUser?.uid // Usar la instancia de MainActivity
         if (userId == null) {
@@ -207,10 +201,6 @@ class MainActivity : AppCompatActivity() {
 
         // --- Convertir Bundle a Map para Firestore ---
         val profileUpdates = hashMapOf<String, Any?>()
-        // Itera sobre las claves del Bundle y añade los datos al mapa
-        // Asegúrate que las claves del Bundle ("updatedNombre", etc.) coincidan
-        // con las que enviaste desde EditProfileDialogFragment
-        // y que los nombres de campo ("nombre", "edad") coincidan con Firestore.
         updatedDataBundle.keySet().forEach { key ->
             when (key) {
                 "updatedNombre" -> profileUpdates["nombre"] = updatedDataBundle.getString(key)
@@ -229,10 +219,8 @@ class MainActivity : AppCompatActivity() {
                     updatedDataBundle.getInt(key)
 
                 "updatedCarbos" -> profileUpdates["carboDiarios"] = updatedDataBundle.getInt(key)
-                // Añade un campo para marcar el perfil como completado si es relevante
                 "profileWasUpdated" -> if (updatedDataBundle.getBoolean(key)) profileUpdates["profileCompleted"] =
                     true
-                // Ignora otras claves si no son campos de Firestore
             }
         }
         // -------------------------------------------
@@ -244,10 +232,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        // --- ¡¡LOG CLAVE AQUÍ!! ---
-        // Imprime el mapa que SÍ se va a enviar a Firestore
         Log.d(TAG, "saveProfileUpdatesToFirestore ENVIANDO: $profileUpdates")
-        // --------------------------
 
         // Mostrar progreso usando el ProgressBar de MainActivity
         binding.mainActivityProgressBar.visibility = View.VISIBLE
@@ -260,20 +245,16 @@ class MainActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 binding.mainActivityProgressBar.visibility = View.GONE // Ocultar al éxito
                 Log.d(TAG, "Perfil de usuario actualizado correctamente en Firestore.")
-                Toast.makeText(this, "Perfil actualizado", Toast.LENGTH_SHORT).show() // Usar 'this'
+                Toast.makeText(this, "Perfil actualizado", Toast.LENGTH_SHORT).show()
 
-                // --- ¡ACCIÓN CLAVE POST-GUARDADO! ---
-                // Recargar los datos desde Firestore para asegurar consistencia
-                // Esto actualizará currentUserProfile y la UI (NavHeader, etc.)
                 fetchUserProfileData()
-                // Ya NO necesitas llamar a updateLocalProfile o calculateAndSetMacroGoals aquí
 
             }
             .addOnFailureListener { e ->
                 binding.mainActivityProgressBar.visibility = View.GONE // Ocultar en caso de error
                 Log.e(TAG, "Error al actualizar el perfil en Firestore", e)
                 Toast.makeText(this, "Error al guardar: ${e.message}", Toast.LENGTH_LONG)
-                    .show() // Usar 'this'
+                    .show()
             }
         // ---------------------------------
     }
@@ -318,14 +299,14 @@ class MainActivity : AppCompatActivity() {
     }
     // -----------------------------------------------
 
-    // --- Actualización de la Cabecera del Drawer (Sin cambios) ---
+    // --- Actualización de la Cabecera del Drawer ---
     private fun updateNavHeader() {
         try {
             val headerView = binding.navViewDrawer.getHeaderView(0)
             val headerName: TextView =
-                headerView.findViewById(R.id.textViewHeaderName) // Usa tus IDs
+                headerView.findViewById(R.id.textViewHeaderName)
             val headerEmail: TextView =
-                headerView.findViewById(R.id.textViewHeaderEmail) // Usa tus IDs
+                headerView.findViewById(R.id.textViewHeaderEmail)
             val firebaseUser = firebaseAuth.currentUser
 
             if (currentUserProfile != null) {
@@ -348,12 +329,12 @@ class MainActivity : AppCompatActivity() {
     }
     // ---------------------------------------------
 
-    // --- Diálogo de Confirmación para Logout (Sin cambios) ---
+    // --- Diálogo de Confirmación para Logout ---
     private fun showLogoutConfirmationDialog() {
         AlertDialog.Builder(this)
             .setTitle("Cerrar Sesión")
             .setMessage("¿Estás seguro?")
-            .setIcon(R.drawable.baseline_logout_24) // Asegúrate de tener el icono
+            .setIcon(R.drawable.baseline_logout_24)
             .setPositiveButton("Sí") { dialog, _ ->
                 performLogout()
                 dialog.dismiss()
@@ -363,7 +344,7 @@ class MainActivity : AppCompatActivity() {
     }
     // ------------------------------------------
 
-    // --- Lógica de Cierre de Sesión (Sin cambios) ---
+    // --- Lógica de Cierre de Sesión  ---
     private fun performLogout() {
         Log.d(TAG, "Cerrando sesión...")
         firebaseAuth.signOut()
@@ -374,7 +355,7 @@ class MainActivity : AppCompatActivity() {
     }
     // ---------------------------------
 
-    // --- Helper para ir a Login (Sin cambios) ---
+    // --- Helper para ir a Login ---
     private fun goToLogin() {
         val intent = Intent(this, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -383,7 +364,7 @@ class MainActivity : AppCompatActivity() {
     }
     // ---------------------------
 
-    // --- Manejo del botón "Up" (Sin cambios) ---
+    // --- Manejo del botón "Up" ---
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(
             navController,

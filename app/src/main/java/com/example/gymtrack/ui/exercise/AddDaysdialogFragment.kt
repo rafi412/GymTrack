@@ -1,4 +1,4 @@
-package com.example.gymtrack.ui.exercise // O tu paquete
+package com.example.gymtrack.ui.exercise
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
@@ -10,7 +10,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
-import com.example.gymtrack.databinding.DialogAddDaysBinding // Binding del nuevo diálogo
+import com.example.gymtrack.databinding.DialogAddDaysBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -36,10 +36,10 @@ class AddDaysDialogFragment : DialogFragment() {
 
     private val TAG = "AddDaysDialog"
 
-    // Interfaz para notificar cuando se finaliza (opcional, si necesitas hacer algo más)
     interface AddDaysListener {
         fun onAddDaysFinished(routineId: String)
     }
+
     private var listener: AddDaysListener? = null
 
 
@@ -75,11 +75,9 @@ class AddDaysDialogFragment : DialogFragment() {
             return
         }
 
-        // Obtener listener (opcional)
         try {
             listener = parentFragment as? AddDaysListener
         } catch (e: ClassCastException) {
-            // No hacer nada si el padre no implementa, es opcional
         }
 
         // Determinar el próximo número de orden al iniciar
@@ -104,7 +102,10 @@ class AddDaysDialogFragment : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     }
 
@@ -113,14 +114,14 @@ class AddDaysDialogFragment : DialogFragment() {
             addDayToRoutine()
         }
         binding.dialogButtonFinish.setOnClickListener {
-            listener?.onAddDaysFinished(routineId) // Notificar (opcional)
+            listener?.onAddDaysFinished(routineId)
             dismiss()
         }
     }
 
     private fun fetchNextDayOrder() {
         val currentUser = auth.currentUser
-        if (currentUser == null) return // No debería pasar
+        if (currentUser == null) return
 
         val userId = currentUser.uid
         db.collection("users").document(userId)
@@ -187,7 +188,8 @@ class AddDaysDialogFragment : DialogFragment() {
             .addOnFailureListener { e ->
                 showLoading(false)
                 Log.e(TAG, "Error al añadir día", e)
-                Toast.makeText(context, "Error al añadir día: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Error al añadir día: ${e.message}", Toast.LENGTH_LONG)
+                    .show()
             }
     }
 
@@ -197,7 +199,6 @@ class AddDaysDialogFragment : DialogFragment() {
         } else {
             binding.textAddedDaysDialog.text = addedDaysTextBuilder.toString()
         }
-        // Actualizar hint o label si quieres indicar el siguiente número de día
         binding.dialogInputLayoutDayName.hint = "Nombre del Día $nextDayOrder"
     }
 

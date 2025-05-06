@@ -1,5 +1,4 @@
-// --- Definición de la Data Class (Asegúrate que esté accesible para HomeFragment) ---
-import com.google.firebase.Timestamp // Importar si usas Timestamps
+import com.google.firebase.Timestamp
 
 data class User(
     val username: String? = null,

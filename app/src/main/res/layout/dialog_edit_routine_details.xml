@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         android:hint="Nombre de la Rutina">
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/dialog_edit_edit_text_routine_name"
             android:layout_width="match_parent"
@@ -35,6 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         android:hint="Descripción (Opcional)">
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/dialog_edit_edit_text_routine_desc"
             android:layout_width="match_parent"
@@ -49,6 +51,7 @@
         android:layout_marginTop="16dp"
         android:gravity="end"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/dialog_edit_button_cancel"
             style="?attr/materialButtonOutlinedStyle"
@@ -56,6 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:text="Cancelar" />
+
         <Button
             android:id="@+id/dialog_edit_button_save"
             android:layout_width="wrap_content"

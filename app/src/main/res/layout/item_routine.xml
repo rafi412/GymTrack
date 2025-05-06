@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Cambiar raíz a ConstraintLayout para posicionar fácilmente el botón -->
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
-    android:background="?attr/selectableItemBackground">
+    android:background="?attr/selectableItemBackground"
+    android:padding="16dp">
 
     <!-- Contenedor para Nombre y Descripción -->
     <LinearLayout
         android:id="@+id/layout_routine_info"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button_delete_routine_item"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginEnd="8dp">
+        app:layout_constraintEnd_toStartOf="@+id/button_delete_routine_item"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/text_routine_item_name"
@@ -43,14 +41,14 @@
         android:id="@+id/buttonShareRoutine"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Compartir Rutina"
         android:src="@drawable/baseline_share_24"
-        app:tint="?attr/colorControlNormal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button_delete_routine_item"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintBottom_toBottomOf="parent"
-    android:layout_marginEnd="8dp"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/colorControlNormal" />
 
     <!-- Botón Eliminar -->
     <ImageButton
@@ -60,9 +58,9 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Eliminar rutina"
         android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:srcCompat="@drawable/baseline_delete_24" />
 
 

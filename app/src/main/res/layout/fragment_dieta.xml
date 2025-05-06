@@ -7,235 +7,234 @@
     android:fillViewport="true"
     tools:context=".ui.diet.DietaFragment">
 
-    <!-- Usar ConstraintLayout como hijo directo del ScrollView -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-    android:padding="16dp">
+        android:padding="16dp">
 
-    <!-- Título Principal -->
-    <TextView
-        android:id="@+id/text_dieta_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Seguimiento Diario"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <!-- Título Principal -->
+        <TextView
+            android:id="@+id/text_dieta_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Seguimiento Diario"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Sección Calorías -->
-    <TextView
-        android:id="@+id/label_calories"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Calorías"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_dieta_title" />
+        <!-- Sección Calorías -->
+        <TextView
+            android:id="@+id/label_calories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Calorías"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_dieta_title" />
 
-    <TextView
-        android:id="@+id/text_calories_progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-        app:layout_constraintBaseline_toBaselineOf="@id/label_calories"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="0 / 0 kcal" />
+        <TextView
+            android:id="@+id/text_calories_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintBaseline_toBaselineOf="@id/label_calories"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="0 / 0 kcal" />
 
-    <ProgressBar
-        android:id="@+id/progress_bar_calories"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:max="100"
-        android:progress="0"
-        android:progressTint="?attr/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/label_calories" />
+        <ProgressBar
+            android:id="@+id/progress_bar_calories"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:max="100"
+            android:progress="0"
+            android:progressTint="?attr/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_calories" />
 
-    <!-- Sección Proteínas -->
-    <TextView
-        android:id="@+id/label_protein"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Proteínas"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progress_bar_calories" />
+        <!-- Sección Proteínas -->
+        <TextView
+            android:id="@+id/label_protein"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Proteínas"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/progress_bar_calories" />
 
-    <TextView
-        android:id="@+id/text_protein_progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-        app:layout_constraintBaseline_toBaselineOf="@id/label_protein"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="0 / 0 g" />
+        <TextView
+            android:id="@+id/text_protein_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            app:layout_constraintBaseline_toBaselineOf="@id/label_protein"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="0 / 0 g" />
 
-    <ProgressBar
-        android:id="@+id/progress_bar_protein"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:max="100"
-        android:progress="0"
-        android:progressTint="?attr/colorSecondary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/label_protein" />
-
-
-    <!-- Sección Carbohidratos -->
-    <TextView
-        android:id="@+id/label_carbs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Carbohidratos"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progress_bar_protein" />
-
-    <TextView
-        android:id="@+id/text_carbs_progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-        app:layout_constraintBaseline_toBaselineOf="@id/label_carbs"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="0 / 0 g" />
-
-    <ProgressBar
-        android:id="@+id/progress_bar_carbs"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:max="100"
-        android:progress="0"
-        android:progressTint="@color/electric_blue_dark"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/label_carbs" />
+        <ProgressBar
+            android:id="@+id/progress_bar_protein"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:max="100"
+            android:progress="0"
+            android:progressTint="?attr/colorSecondary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_protein" />
 
 
-    <!-- TextView para mensajes (Sin metas, errores, etc.) -->
-    <TextView
-        android:id="@+id/text_dieta_message"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progress_bar_carbs"
-        tools:text="Completa tu perfil para ver tus metas."
-        tools:visibility="visible"/>
+        <!-- Sección Carbohidratos -->
+        <TextView
+            android:id="@+id/label_carbs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Carbohidratos"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/progress_bar_protein" />
 
-    <!-- Título para la lista de comidas -->
-    <TextView
-        android:id="@+id/label_meals_today"
-        android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="24dp"
-    android:layout_marginEnd="8dp"
-    android:text="Comidas de Hoy"
-    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toStartOf="@+id/button_clear_meals"
-    app:layout_constraintTop_toBottomOf="@id/text_dieta_message"/>
+        <TextView
+            android:id="@+id/text_carbs_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            app:layout_constraintBaseline_toBaselineOf="@id/label_carbs"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="0 / 0 g" />
 
-    <!-- Botón Limpiar Comidas -->
-    <ImageButton
-        android:id="@+id/button_clear_meals"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="8dp"
-        android:contentDescription="Limpiar comidas del día"
-        app:srcCompat="@drawable/baseline_delete_forever_24"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="@id/label_meals_today"
-    app:layout_constraintBottom_toBottomOf="@id/label_meals_today"/>
-
-    <!-- ***** RecyclerView para Comidas ***** -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_meals"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
-        android:nestedScrollingEnabled="true"
-        android:clipToPadding="false"
-    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-    app:layout_constraintTop_toBottomOf="@id/label_meals_today"
-    app:layout_constraintBottom_toTopOf="@+id/fab_add_meal"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    tools:listitem="@layout/item_meal"
-    tools:itemCount="3"
-    android:visibility="gone"
-    tools:visibility="visible"/>
-    <!-- ********************************** -->
-
-    <!-- ***** TextView para Lista Vacía de Comidas ***** -->
-    <TextView
-        android:id="@+id/text_no_meals"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No has registrado comidas hoy."
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="@id/recycler_view_meals"
-        app:layout_constraintBottom_toBottomOf="@id/recycler_view_meals"
-        app:layout_constraintStart_toStartOf="@id/recycler_view_meals"
-        app:layout_constraintEnd_toEndOf="@id/recycler_view_meals"
-        app:layout_constraintVertical_bias="0.1"
-        tools:visibility="visible"/>
-    <!-- ****************************************** -->
+        <ProgressBar
+            android:id="@+id/progress_bar_carbs"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:max="100"
+            android:progress="0"
+            android:progressTint="@color/electric_blue_dark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_carbs" />
 
 
-    <!-- FAB para añadir comida manualmente -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_meal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:contentDescription="Añadir Comida"
-        app:srcCompat="@drawable/baseline_add_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <!-- TextView para mensajes (Sin metas, errores, etc.) -->
+        <TextView
+            android:id="@+id/text_dieta_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/progress_bar_carbs"
+            tools:text="Completa tu perfil para ver tus metas."
+            tools:visibility="visible" />
+
+        <!-- Título para la lista de comidas -->
+        <TextView
+            android:id="@+id/label_meals_today"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
+            android:text="Comidas de Hoy"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            app:layout_constraintEnd_toStartOf="@+id/button_clear_meals"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_dieta_message" />
+
+        <!-- Botón Limpiar Comidas -->
+        <ImageButton
+            android:id="@+id/button_clear_meals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Limpiar comidas del día"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/label_meals_today"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/label_meals_today"
+            app:srcCompat="@drawable/baseline_delete_forever_24" />
+
+        <!-- ***** RecyclerView para Comidas ***** -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_meals"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:clipToPadding="false"
+            android:nestedScrollingEnabled="true"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@+id/fab_add_meal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_meals_today"
+            tools:itemCount="3"
+            tools:listitem="@layout/item_meal"
+            tools:visibility="visible" />
+        <!-- ********************************** -->
+
+        <!-- ***** TextView para Lista Vacía de Comidas ***** -->
+        <TextView
+            android:id="@+id/text_no_meals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No has registrado comidas hoy."
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/recycler_view_meals"
+            app:layout_constraintEnd_toEndOf="@id/recycler_view_meals"
+            app:layout_constraintStart_toStartOf="@id/recycler_view_meals"
+            app:layout_constraintTop_toTopOf="@id/recycler_view_meals"
+            app:layout_constraintVertical_bias="0.1"
+            tools:visibility="visible" />
+        <!-- ****************************************** -->
 
 
-    <!-- ProgressBar de Carga General -->
-    <ProgressBar
-        android:id="@+id/progress_bar_dieta"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible"/>
-
-    <!-- Group para ocultar/mostrar barras de progreso -->
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/group_macro_progress_visibility"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        app:constraint_referenced_ids="label_calories,text_calories_progress,progress_bar_calories,label_protein,text_protein_progress,progress_bar_protein,label_carbs,text_carbs_progress,progress_bar_carbs" />
+        <!-- FAB para añadir comida manualmente -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_add_meal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:contentDescription="Añadir Comida"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/baseline_add_24" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+        <!-- ProgressBar de Carga General -->
+        <ProgressBar
+            android:id="@+id/progress_bar_dieta"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+        <!-- Group para ocultar/mostrar barras de progreso -->
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_macro_progress_visibility"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:constraint_referenced_ids="label_calories,text_calories_progress,progress_bar_calories,label_protein,text_protein_progress,progress_bar_protein,label_carbs,text_carbs_progress,progress_bar_carbs" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

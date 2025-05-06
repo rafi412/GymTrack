@@ -133,7 +133,7 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Campos para macros (IDs Corregidos) -->
+        <!-- Campos para macros -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

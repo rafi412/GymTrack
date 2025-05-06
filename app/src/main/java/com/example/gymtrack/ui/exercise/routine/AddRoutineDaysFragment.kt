@@ -1,5 +1,4 @@
-package com.example.gymtrack.ui.exercise.routine // O tu paquete
-
+package com.example.gymtrack.ui.exercise.routine
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
@@ -45,7 +44,7 @@ class AddRoutineDaysFragment : Fragment() {
         binding.textAddedDaysList.movementMethod = ScrollingMovementMethod() // Para scroll
 
         setupObservers()
-        setupClickListeners() // Configura los listeners aquí
+        setupClickListeners()
     }
 
     private fun setupObservers() {
@@ -69,10 +68,6 @@ class AddRoutineDaysFragment : Fragment() {
                 days.isNotEmpty() // Cambiado a buttonSaveRoutineFinal
         }
 
-        // --- ELIMINADO: Observador de saveStatus de aquí ---
-        // La lógica de guardado final ya no está en este fragmento
-        // routineViewModel.saveStatus.observe(viewLifecycleOwner) { ... }
-        // --------------------------------------------------
     }
 
     private fun setupClickListeners() {
@@ -101,15 +96,13 @@ class AddRoutineDaysFragment : Fragment() {
                 return@setOnClickListener
             }
             // Navegar al fragmento de configuración de ejercicios
-            // *** ASEGÚRATE QUE ESTE ID DE ACCIÓN ES CORRECTO EN mobile_navigation.xml ***
-            findNavController().navigate(R.id.action_addRoutineDaysFragment_to_configureExercisesFragment) // <-- CORREGIDO
+            findNavController().navigate(R.id.action_addRoutineDaysFragment_to_configureExercisesFragment)
         }
 
     }
 
 
     private fun showLoading(isLoading: Boolean) {
-        // Ya no necesitamos el ProgressBar aquí si el guardado final no ocurre aquí
         // binding.progressBarSaveRoutine.isVisible = isLoading
         binding.buttonAddDayToList.isEnabled = !isLoading
         // Habilitar botón "Siguiente" solo si hay días y no está (hipotéticamente) cargando

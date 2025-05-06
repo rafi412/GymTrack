@@ -1,4 +1,4 @@
-package com.example.gymtrack.ui // O donde lo pongas
+package com.example.gymtrack.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -66,7 +66,6 @@ class AddOrEditDayDialogFragment : DialogFragment() {
         }
         if (routineId.isEmpty()) {
             Log.e(TAG, "Routine ID vacío en onCreate")
-            // Considera no llamar a dismiss aquí, sino manejarlo en onViewCreated o al intentar guardar
         }
 
         try {
@@ -87,7 +86,6 @@ class AddOrEditDayDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState) // Llamada a super
-        // Validar routineId aquí también por si acaso
         if (routineId.isEmpty()) {
             Toast.makeText(context, "Error: ID de rutina no válido.", Toast.LENGTH_SHORT).show()
             dismissAllowingStateLoss()
@@ -187,7 +185,6 @@ class AddOrEditDayDialogFragment : DialogFragment() {
     // ---------------------------------------
 
     private fun showLoading(isLoading: Boolean) {
-        // Asegurarse que el binding no es null
         _binding?.let {
             it.dialogDayProgressBar.isVisible = isLoading
             it.dialogDayButtonSave.isEnabled = !isLoading

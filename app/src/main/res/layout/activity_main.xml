@@ -30,7 +30,6 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <!-- Contenedor donde se cargan los Fragmentos -->
-        <!-- Ajustado layout_height y añadido layout_marginBottom para dejar espacio al BottomNav -->
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment_activity_main"
             android:name="androidx.navigation.fragment.NavHostFragment"
@@ -41,8 +40,6 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:navGraph="@navigation/mobile_navigation" />
 
-
-        <!-- ***** AÑADIDO BottomNavigationView ***** -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_nav_view"
             android:layout_width="match_parent"
@@ -61,12 +58,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-        <!-- Ajusta las constraints según tu layout -->
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
-    <!-- Vista del Menú Lateral (Navigation Drawer - Sin cambios) -->
+    <!-- Vista del Menú Lateral (Navigation Drawer -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view_drawer"
         android:layout_width="wrap_content"

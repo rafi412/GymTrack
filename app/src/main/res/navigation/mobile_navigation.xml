@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_home"
-    tools:viewBindingIgnore="true"> <!-- Buena práctica añadir esto aquí -->
+    tools:viewBindingIgnore="true">
 
-    <!-- Destinos principales existentes (para BottomNav/Drawer) -->
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.gymtrack.ui.user.HomeFragment"
@@ -18,14 +17,14 @@
         android:name="com.example.gymtrack.ui.exercise.ExerciseFragment"
         android:label="@string/title_exercise"
         tools:layout="@layout/fragment_exercise">
-        <!-- ***** ACCIÓN AÑADIDA: Desde Dashboard a Crear Detalles ***** -->
+
         <action
             android:id="@+id/action_navigation_dashboard_to_createRoutineDetailsFragment"
             app:destination="@id/createRoutineDetailsFragment" />
 
         <action
             android:id="@+id/action_navigation_dashboard_to_routineDetailFragment"
-            app:destination="@id/routineDetailFragment"/>
+            app:destination="@id/routineDetailFragment" />
     </fragment>
 
     <fragment
@@ -34,21 +33,17 @@
         android:label="@string/title_dieta"
         tools:layout="@layout/fragment_dieta" />
 
-    <!-- (Opcional) Añadir SettingsFragment si lo necesitas -->
     <fragment
         android:id="@+id/nav_settings"
         android:name="com.example.gymtrack.ui.settings.SettingsFragment"
         android:label="Configuración"
         tools:layout="@layout/fragment_settings" />
 
-
-    <!-- ***** NUEVOS FRAGMENTOS AÑADIDOS para Creación de Rutina ***** -->
     <fragment
         android:id="@+id/createRoutineDetailsFragment"
         android:name="com.example.gymtrack.ui.exercise.routine.CreateRoutineDetailsFragment"
         android:label="Crear Rutina - Detalles"
         tools:layout="@layout/fragment_create_routine_details">
-        <!-- Acción para ir al siguiente paso: añadir días -->
         <action
             android:id="@+id/action_createRoutineDetailsFragment_to_addRoutineDaysFragment"
             app:destination="@id/addRoutineDaysFragment" />
@@ -59,38 +54,34 @@
         android:name="com.example.gymtrack.ui.exercise.routine.AddRoutineDaysFragment"
         android:label="Crear Rutina - Añadir Días"
         tools:layout="@layout/fragment_add_routine_days">
-        <!-- Acción para volver al dashboard después de guardar -->
         <action
             android:id="@+id/action_addRoutineDaysFragment_to_navigation_dashboard"
             app:destination="@id/navigation_dashboard"
             app:popUpTo="@id/navigation_dashboard"
-        app:popUpToInclusive="true"/> <!-- Elimina los fragmentos de creación de la pila -->
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_addRoutineDaysFragment_to_configureExercisesFragment"
-            app:destination="@id/configureExercisesFragment"/>
+            app:destination="@id/configureExercisesFragment" />
 
     </fragment>
-    <!-- *************************************************************** -->
     <fragment
         android:id="@+id/configureExercisesFragment"
         android:name="com.example.gymtrack.ui.exercise.ConfigureExercisesFragment"
         android:label="Configurar Ejercicios"
         tools:layout="@layout/fragment_configure_exercises">
-        <!-- Acción para volver al dashboard después de guardar -->
 
         <action
             android:id="@+id/action_addRoutineDaysFragment_to_navigation_dashboard"
             app:destination="@id/navigation_dashboard"
             app:popUpTo="@id/navigation_dashboard"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
         android:id="@+id/routineDetailFragment"
         android:name="com.example.gymtrack.ui.exercise.routine.RoutineDetailFragment"
         android:label="Detalles de Rutina"
-        tools:layout="@layout/fragment_routine_detail" >
-        <!-- Argumento para recibir el ID de la rutina -->
+        tools:layout="@layout/fragment_routine_detail">
         <argument
             android:name="routineId"
             app:argType="string" />

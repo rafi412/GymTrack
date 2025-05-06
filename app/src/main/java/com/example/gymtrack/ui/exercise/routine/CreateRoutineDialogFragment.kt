@@ -1,4 +1,4 @@
-package com.example.gymtrack.ui.exercise.routine // O tu paquete
+package com.example.gymtrack.ui.exercise.routine
 
 import android.os.Bundle
 import android.util.Log
@@ -29,11 +29,11 @@ class CreateRoutineDialogFragment : DialogFragment() {
 
     private val TAG = "CreateRoutineDialog"
 
-    // --- Interfaz Corregida ---
     // Interfaz para notificar al fragmento padre DESPUÉS de crear la rutina base
     interface RoutineCreationListener {
-        fun onRoutineCreatedOrUpdated(routineId: String) // Solo necesita el ID para refrescar
+        fun onRoutineCreatedOrUpdated(routineId: String)
     }
+
     private var listener: RoutineCreationListener? = null
     // -------------------------
 
@@ -66,7 +66,10 @@ class CreateRoutineDialogFragment : DialogFragment() {
     override fun onStart() {
         super.onStart()
         // Ajustes de ventana (sin cambios)
-        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     }
 
@@ -100,7 +103,8 @@ class CreateRoutineDialogFragment : DialogFragment() {
         showLoading(true) // Mostrar progreso
 
         val userId = currentUser.uid
-        val userRoutinesCollection = db.collection("users").document(userId).collection("userRoutines")
+        val userRoutinesCollection =
+            db.collection("users").document(userId).collection("userRoutines")
 
         // Datos para la nueva rutina
         val newRoutineData = hashMapOf(
@@ -112,9 +116,11 @@ class CreateRoutineDialogFragment : DialogFragment() {
         // Añadir la rutina a Firestore
         userRoutinesCollection.add(newRoutineData)
             .addOnSuccessListener { documentReference ->
-                // No ocultar loading aquí, se hará al cerrar el diálogo
                 val newRoutineId = documentReference.id
-                Log.d(TAG, "Rutina '$routineName' creada con ID: $newRoutineId. Abriendo diálogo de días.")
+                Log.d(
+                    TAG,
+                    "Rutina '$routineName' creada con ID: $newRoutineId. Abriendo diálogo de días."
+                )
 
                 // --- Llamada Corregida al Listener ---
                 // Notificar al ExerciseFragment que la rutina se creó (para que refresque la lista)
@@ -132,7 +138,8 @@ class CreateRoutineDialogFragment : DialogFragment() {
             .addOnFailureListener { e ->
                 showLoading(false) // Ocultar loading en caso de error
                 Log.e(TAG, "Error al guardar rutina", e)
-                Toast.makeText(context, "Error al guardar rutina: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Error al guardar rutina: ${e.message}", Toast.LENGTH_LONG)
+                    .show()
                 // No cerrar el diálogo para que el usuario pueda reintentar
             }
     }
@@ -151,7 +158,6 @@ class CreateRoutineDialogFragment : DialogFragment() {
         _binding = null // Limpiar binding
     }
 
-    // Opcional: Método estático para crear instancia si necesitas pasarle argumentos en el futuro
     // companion object {
     //     fun newInstance(): CreateRoutineDialogFragment {
     //         return CreateRoutineDialogFragment()

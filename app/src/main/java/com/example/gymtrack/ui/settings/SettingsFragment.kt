@@ -21,9 +21,6 @@ class SettingsFragment : Fragment() {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // Puedes añadir lógica aquí si es necesario, por ejemplo, configurar listeners
-        // binding.someSettingSwitch.setOnCheckedChangeListener { ... }
-
         return root
     }
 

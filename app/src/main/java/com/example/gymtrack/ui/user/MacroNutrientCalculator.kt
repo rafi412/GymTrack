@@ -1,4 +1,4 @@
-package com.example.gymtrack.ui.user // O tu paquete preferido
+package com.example.gymtrack.ui.user
 
 import android.util.Log
 import kotlin.math.roundToInt
@@ -10,7 +10,6 @@ object MacronutrientCalculator {
     // --- Constantes Configurables ---
 
     // Factores de Actividad (Multiplicadores TDEE)
-    // Es crucial que las claves coincidan con lo que guardas/seleccionas en la UI
     private val activityFactors = mapOf(
         "SEDENTARIO" to 1.2,
         "LIGERO" to 1.375,      // Ejercicio ligero 1-3 días/sem
@@ -28,7 +27,6 @@ object MacronutrientCalculator {
         "GANAR_MASA_RAPIDO" to 500 // Superávit mayor
     )
 
-    // Distribución de Macros (Ejemplo estándar, podrías hacerlo configurable)
     // Proteínas: Gramos por kg de peso corporal
     private const val PROTEIN_GRAMS_PER_KG = 1.8
     // Grasas: Porcentaje de las calorías totales
@@ -52,8 +50,8 @@ object MacronutrientCalculator {
         sex: String?,
         weightKg: Double?,
         heightCm: Double?,
-        activityLevelKey: String?, // Clave como "SEDENTARIO", "LIGERO", etc.
-        goalKey: String?          // Clave como "PERDER_PESO", "MANTENER", etc.
+        activityLevelKey: String?,
+        goalKey: String?
     ): MacroGoals? { // Devuelve nullable por si faltan datos
 
         // Validación de entradas básicas
@@ -93,8 +91,6 @@ object MacronutrientCalculator {
             // Asegurar que los carbos no sean negativos
             if (carbCalories < 0) {
                 Log.w(TAG, "Calorías de carbohidratos negativas ($carbCalories). El objetivo calórico ($targetCalories) podría ser demasiado bajo para la proteína ($proteinCalories kcal) y grasa ($fatCalories kcal) calculadas.")
-                // Podrías lanzar un error, devolver null, o ajustar otros macros (más complejo)
-                // Por ahora, devolveremos 0g de carbos y ajustaremos calorías si es necesario.
                 val adjustedCalories = proteinCalories + fatCalories // Recalcular calorías si carbos son 0
                 Log.w(TAG, "Ajustando calorías objetivo a $adjustedCalories kcal debido a carbos negativos.")
                 return MacroGoals(

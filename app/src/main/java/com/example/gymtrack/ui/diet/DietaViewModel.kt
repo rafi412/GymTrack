@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-// Importa tu DTO y User desde sus paquetes correctos
 import com.google.ai.client.generativeai.GenerativeModel // Importar GenerativeModel
 import com.google.ai.client.generativeai.type.InvalidStateException // Para errores de seguridad
 import com.google.firebase.auth.FirebaseAuth
@@ -21,14 +20,12 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.SerializationException
 
-// Data class para Metas UI (sin cambios)
 data class MacroTargetsUi(
     val calories: Int = 0,
     val protein: Int = 0,
     val carbs: Int = 0
 )
 
-// Data class para Consumo UI (sin cambios)
 data class DailyIntakeUi(
     var calories: Int = 0,
     var protein: Int = 0,
@@ -61,7 +58,6 @@ class DietaViewModel : ViewModel() {
     val mealsToday: LiveData<List<MealData>> = _mealsToday
     // ----------------------------------------------------
 
-    // --- NUEVO: LiveData para pasar la estimación de IA al diálogo ---
     private val _estimatedMacros = MutableLiveData<MacroEstimate?>()
     val estimatedMacros: LiveData<MacroEstimate?> = _estimatedMacros
 
@@ -287,9 +283,6 @@ class DietaViewModel : ViewModel() {
 
             // Actualizar el LiveData de consumo
             addToIntake(cals, prot, carb)
-
-            // TODO: Guardar la comida en Firestore
-            // saveMealToFirestore(cals, prot, carb, fat, foodDescription)
 
         } catch (e: SerializationException) {
             Log.e(TAG, "Error al parsear JSON de Gemini: ${e.message}")

@@ -8,7 +8,6 @@ import com.example.gymtrack.databinding.ItemMealBinding // Binding para item_mea
 
 class MealAdapter(
     private var meals: MutableList<MealData>
-    // Añade listeners si necesitas (ej: onDeleteClick: (MealData) -> Unit)
 ) : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealViewHolder {
@@ -35,8 +34,6 @@ class MealAdapter(
             binding.textMealItemMacros.text =
                 "P: ${meal.proteinGrams ?: 0}g / C: ${meal.carbGrams ?: 0}g / G: ${meal.fatGrams ?: 0}g"
 
-            // Configura listeners aquí si los añadiste (ej: para borrar)
-            // binding.buttonDeleteMealItem.setOnClickListener { onDeleteClick(meal) }
         }
     }
 }

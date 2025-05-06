@@ -1,4 +1,4 @@
-package com.example.gymtrack.ui.exercise.routine // O tu paquete
+package com.example.gymtrack.ui.exercise.routine
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,14 +8,11 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import android.util.Log // Asegúrate de importar Log
+import android.util.Log
 
-// Data class para los días temporales (sin cambios)
 data class DayData(val name: String, val order: Int)
 
-// --- NUEVA Data class para los ejercicios temporales ---
 data class ExerciseData(
-    // val id: String = UUID.randomUUID().toString(), // ID local temporal si lo necesitas
     val name: String,
     val muscleGroup: String?,
     val series: Int?,
@@ -30,23 +27,18 @@ enum class SaveStatus { IDLE, LOADING, SUCCESS, ERROR }
 
 class RoutineCreationViewModel : ViewModel() {
 
-    // Detalles de la rutina (sin cambios)
     private val _routineName = MutableLiveData<String?>()
     val routineName: LiveData<String?> = _routineName
     private val _routineDescription = MutableLiveData<String?>()
     val routineDescription: LiveData<String?> = _routineDescription
 
-    // Lista de días (sin cambios)
     private val _daysList = MutableLiveData<MutableList<DayData>>(mutableListOf())
     val daysList: LiveData<MutableList<DayData>> = _daysList
 
-    // --- NUEVO: Mapa para almacenar ejercicios por día ---
-    // La clave será el 'order' del DayData para simplificar
     private val _exercisesPerDay = MutableLiveData<MutableMap<Int, MutableList<ExerciseData>>>(mutableMapOf())
     val exercisesPerDay: LiveData<MutableMap<Int, MutableList<ExerciseData>>> = _exercisesPerDay
     // -------------------------------------------------
 
-    // Estado del guardado (sin cambios)
     private val _saveStatus = MutableLiveData<SaveStatus>(SaveStatus.IDLE)
     val saveStatus: LiveData<SaveStatus> = _saveStatus
     private val _errorMessage = MutableLiveData<String?>()
@@ -84,8 +76,6 @@ class RoutineCreationViewModel : ViewModel() {
             val currentExercisesMap = _exercisesPerDay.value ?: mutableMapOf()
             currentExercisesMap.remove(dayData.order)
             _exercisesPerDay.value = currentExercisesMap // Notificar cambio
-            // --------------------------------------------
-            // Opcional: Reordenar los días restantes y sus claves en el mapa de ejercicios
         }
     }
 
@@ -152,7 +142,7 @@ class RoutineCreationViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
-                // 1. Crear el documento de la rutina (sin cambios)
+                // 1. Crear el documento de la rutina
                 val userRoutinesCollection = db.collection("users").document(userId).collection("userRoutines")
                 val newRoutineData = hashMapOf(
                     "nombre" to name,

@@ -32,7 +32,7 @@
 
     </LinearLayout>
 
-    <!-- Fila para Macros (Opcional: Mostrar descripción también) -->
+    <!-- Fila para Macros -->
     <TextView
         android:id="@+id/text_meal_item_macros"
         android:layout_width="match_parent"
@@ -42,7 +42,7 @@
         android:textColor="?android:attr/textColorSecondary"
         tools:text="P: 20g / C: 45g / G: 10g" />
 
-    <!-- Opcional: Botón para eliminar esta comida -->
+    <!-- Más adelante: Botón para eliminar esta comida -->
     <!-- <ImageButton
         android:id="@+id/button_delete_meal_item"
         android:layout_width="wrap_content"

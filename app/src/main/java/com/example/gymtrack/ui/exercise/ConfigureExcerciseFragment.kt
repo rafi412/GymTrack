@@ -1,4 +1,4 @@
-package com.example.gymtrack.ui.exercise // O tu paquete
+package com.example.gymtrack.ui.exercise
 
 import android.os.Bundle
 import android.util.Log
@@ -24,7 +24,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-// Implementa la interfaz del diálogo de añadir ejercicio
 class ConfigureExercisesFragment : Fragment(), AddExerciseDialogFragment.AddExerciseListener {
 
     private var _binding: FragmentConfigureExercisesBinding? = null
@@ -54,7 +53,7 @@ class ConfigureExercisesFragment : Fragment(), AddExerciseDialogFragment.AddExer
         setupRecyclerView()
         setupObservers()
         setupClickListeners()
-        setupTabLayout() // Configurar tabs después de que los días estén en el ViewModel
+        setupTabLayout()
     }
 
     private fun setupRecyclerView() {
@@ -113,7 +112,7 @@ class ConfigureExercisesFragment : Fragment(), AddExerciseDialogFragment.AddExer
                     Toast.makeText(context, errorMsg, Toast.LENGTH_LONG).show()
                     routineViewModel.resetSaveStatus()
                 }
-                else -> {} // IDLE o LOADING
+                else -> {}
             }
         }
     }
@@ -163,12 +162,11 @@ class ConfigureExercisesFragment : Fragment(), AddExerciseDialogFragment.AddExer
         days.forEach { day ->
             binding.tabLayoutDays.addTab(
                 binding.tabLayoutDays.newTab().apply {
-                    text = "Día ${day.order}" // O day.name si prefieres
+                    text = "Día ${day.order}"
                     tag = day // Guardar el objeto DayData en la tag de la tab
                 }
             )
         }
-        // Asegurarse que la tab correcta está seleccionada visualmente
         selectTab(currentSelectedDayOrder)
     }
 
@@ -196,17 +194,12 @@ class ConfigureExercisesFragment : Fragment(), AddExerciseDialogFragment.AddExer
     // Implementación de la interfaz de AddExerciseDialog
     override fun onExerciseAdded(dayOrder: Int, exercise: ExerciseData) {
         Log.d(TAG, "Ejercicio recibido del diálogo para día $dayOrder: ${exercise.name}")
-        // El ViewModel ya se actualizó (si el diálogo lo hizo),
-        // el observer de exercisesPerDay debería actualizar la UI.
-        // Si el diálogo NO actualiza el VM, hazlo aquí:
-        // routineViewModel.addExerciseToDay(dayOrder, exercise)
     }
 
     private fun showLoading(isLoading: Boolean) {
         binding.progressBarSaveRoutineConfigure.isVisible = isLoading
         binding.buttonAddExercise.isEnabled = !isLoading
         binding.buttonSaveRoutineFinalConfigure.isEnabled = !isLoading
-        // Podrías deshabilitar más cosas si es necesario
     }
 
     override fun onDestroyView() {

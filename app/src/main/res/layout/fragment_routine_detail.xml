@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".ui.exercise.routine.RoutineDetailFragment"> <!-- Cambia el paquete si es necesario -->
+    tools:context=".ui.exercise.routine.RoutineDetailFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             android:padding="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/baseline_mode_edit_24" /> <!-- Icono Editar -->
+            app:srcCompat="@drawable/baseline_mode_edit_24" />
 
         <!-- Nombre de la Rutina -->
         <TextView
@@ -62,7 +62,6 @@
             app:layout_constraintTop_toBottomOf="@id/text_routine_detail_desc" />
 
         <!-- Contenedor para Días y Ejercicios -->
-        <!-- Usaremos un LinearLayout vertical para añadir vistas dinámicamente por ahora -->
         <LinearLayout
             android:id="@+id/layout_days_container"
             android:layout_width="0dp"

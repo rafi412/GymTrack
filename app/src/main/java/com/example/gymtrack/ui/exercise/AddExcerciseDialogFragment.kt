@@ -1,5 +1,4 @@
-package com.example.gymtrack.ui.exercise // O tu paquete
-
+package com.example.gymtrack.ui.exercise
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,7 +23,6 @@ class AddExerciseDialogFragment : DialogFragment() {
 
     private val TAG = "AddExerciseDialog"
 
-    // Interfaz para notificar al fragmento padre (ConfigureExercisesFragment)
     interface AddExerciseListener {
         fun onExerciseAdded(dayOrder: Int, exercise: ExerciseData)
     }

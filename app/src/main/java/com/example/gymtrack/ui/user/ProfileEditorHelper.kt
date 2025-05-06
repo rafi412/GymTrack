@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 class ProfileEditorHelper {
 
     companion object {
-        // Método para abrir el diálogo de editar perfil
         fun openEditProfileDialog(context: Context, currentUserProfile: User?) {
             currentUserProfile?.let { userProfile ->
                 // Calcular las metas del usuario antes de abrir el diálogo

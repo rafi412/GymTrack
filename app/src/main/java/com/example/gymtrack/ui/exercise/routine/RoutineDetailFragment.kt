@@ -1,5 +1,4 @@
-package com.example.gymtrack.ui.exercise.routine // O tu paquete
-
+package com.example.gymtrack.ui.exercise.routine
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
@@ -16,9 +15,7 @@ import androidx.core.content.ContextCompat // Para colores
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController // Para popBackStack
-// Importa navArgs si finalmente decides usar SafeArgs
-// import androidx.navigation.fragment.navArgs
-import com.example.gymtrack.R // Importa tu R
+import com.example.gymtrack.R
 import com.example.gymtrack.databinding.FragmentRoutineDetailBinding
 import com.example.gymtrack.ui.AddOrEditDayDialogFragment
 import com.example.gymtrack.ui.routine_detail.AddOrEditExerciseDialogFragment
@@ -45,18 +42,15 @@ interface DayUpdateListener {
     fun onDayUpdated()
 }
 
-// ----------------------------------------------------
 
 class RoutineDetailFragment : Fragment(), EditRoutineDetailsDialogFragment.RoutineDetailsUpdateListener,
-    DayUpdateListener, ExerciseUpdateListener // Listener para editar/añadir ejercicio
+    DayUpdateListener, ExerciseUpdateListener
 {
 
     private var _binding: FragmentRoutineDetailBinding? = null
     private val binding get() = _binding!!
 
-    // --- Recepción de Argumentos SIN Safe Args ---
     private var routineId: String? = null
-    // -------------------------------------------
 
     // Firebase
     private lateinit var db: FirebaseFirestore
@@ -91,14 +85,13 @@ class RoutineDetailFragment : Fragment(), EditRoutineDetailsDialogFragment.Routi
         routineId?.let { id ->
             Log.d(TAG, "Cargando detalles para routineId: $id")
             loadRoutineDetails(id)
-            setupEditListeners() // Configura botón editar rutina principal
+            setupEditListeners() // Configurar botón editar rutina principal
         } ?: run {
             Log.e(TAG, "onViewCreated: routineId es null.")
             handleLoadError("No se pudo cargar la rutina (ID no válido).")
         }
     }
 
-    // Configura SOLO el listener para editar los detalles de la RUTINA
     private fun setupEditListeners() {
         binding.buttonEditRoutineDetails.setOnClickListener {
             val currentName = binding.textRoutineDetailName.text.toString()
@@ -112,7 +105,6 @@ class RoutineDetailFragment : Fragment(), EditRoutineDetailsDialogFragment.Routi
                 dialog.show(childFragmentManager, "EditRoutineDetailsDialog")
             } ?: Toast.makeText(context, "Error ID rutina", Toast.LENGTH_SHORT).show()
         }
-        // Los listeners para editar días/ejercicios se añaden dinámicamente en updateUI
     }
 
     // --- Implementación de los listeners de los diálogos ---
@@ -133,7 +125,7 @@ class RoutineDetailFragment : Fragment(), EditRoutineDetailsDialogFragment.Routi
     // ----------------------------------------------------
 
 
-    // Carga los datos de Firestore (sin cambios en la lógica de carga)
+    // Carga los datos de Firestore
     private fun loadRoutineDetails(routineIdToLoad: String) {
         showLoading(true)
         val userId = auth.currentUser?.uid
@@ -174,8 +166,6 @@ class RoutineDetailFragment : Fragment(), EditRoutineDetailsDialogFragment.Routi
         }
     }
 
-    // --- updateUI ACTUALIZADA con botones ---
-    // Dentro de RoutineDetailFragment.kt -> updateUI
 
     // --- updateUI REFACTORIZADA para mejor estructura ---
     private fun updateUI(
@@ -220,8 +210,6 @@ class RoutineDetailFragment : Fragment(), EditRoutineDetailsDialogFragment.Routi
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
                     )
-                    // Añadir padding o margen si se desea separar visualmente los días
-                    // setPadding(0, 0, 0, dpToPx(8))
                 }
                 // ----------------------------------------------------------------------------------
 
@@ -291,7 +279,6 @@ class RoutineDetailFragment : Fragment(), EditRoutineDetailsDialogFragment.Routi
                         val exerciseId = exerciseDoc.id
                         val exerciseDataMap = exerciseDoc.data ?: mapOf()
                         val exerciseName = exerciseDoc.getString("nombre") ?: "Ejercicio"
-                        // ... (obtener series, reps, formatear detailString) ...
                         var detailString = ""
                         val series = exerciseDoc.getLong("series")
                         val reps = exerciseDoc.getString("repeticiones")
@@ -318,7 +305,7 @@ class RoutineDetailFragment : Fragment(), EditRoutineDetailsDialogFragment.Routi
                                 Log.d(
                                     TAG,
                                     "Botón EDITAR EJERCICIO clickeado para ejercicio ID: $exerciseId"
-                                ) // <-- LOG AQUÍ
+                                )
                                 routineId?.let { rId ->
                                     val serializableData =
                                         if (exerciseDataMap.isNotEmpty()) HashMap(exerciseDataMap) else null
@@ -392,11 +379,9 @@ class RoutineDetailFragment : Fragment(), EditRoutineDetailsDialogFragment.Routi
                 }
                 // -------------------------------------------------------
 
-            } // Fin forEach daysWithExercises
-        } // Fin else (daysWithExercises no está vacío)
+            }
+        }
     }
-    // ------------------------------------------------------
-    // ------------------------------------------------------
 
     // --- Función para Eliminar un DÍA y sus EJERCICIOS ---
     private fun deleteRoutineDay(dayId: String, dayName: String) {
@@ -499,14 +484,12 @@ class RoutineDetailFragment : Fragment(), EditRoutineDetailsDialogFragment.Routi
     }
 
 
-    // Maneja errores de carga (sin cambios)
+    // Maneja errores de carga
     private fun handleLoadError(message: String) { /* ... */ }
 
-    // Muestra/oculta ProgressBar (sin cambios)
+    // Muestra/oculta ProgressBar
     private fun showLoading(isLoading: Boolean) { /* ... */ }
 
-    // Helper dp a px (sin cambios)
-    // Helper dp a px
     private fun dpToPx(dp: Int): Int { // Declara que devuelve Int
         val density = resources.displayMetrics.density
         return (dp * density).toInt() // <-- AÑADIDO return

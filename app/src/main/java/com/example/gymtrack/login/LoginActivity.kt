@@ -1,5 +1,4 @@
-package com.example.gymtrack // O tu paquete
-
+package com.example.gymtrack
 import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -70,9 +69,6 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.buttonGoToRegister.setOnClickListener {
-            // Iniciar la actividad de registro (debes crearla y aplicar lógica similar)
-            // val intent = Intent(this, RegisterActivity::class.java)
-            // startActivity(intent)
             Toast.makeText(this, "Ir a pantalla de Registro (pendiente)", Toast.LENGTH_SHORT).show() // Placeholder
         }
     }

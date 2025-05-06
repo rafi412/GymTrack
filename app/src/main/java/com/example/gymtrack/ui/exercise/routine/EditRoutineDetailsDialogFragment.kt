@@ -1,4 +1,4 @@
-package com.example.gymtrack.ui.exercise.routine // O donde lo pongas
+package com.example.gymtrack.ui.exercise.routine
 
 import android.os.Bundle
 import android.util.Log
@@ -32,7 +32,6 @@ class EditRoutineDetailsDialogFragment : DialogFragment() {
 
     private val TAG = "EditRoutineDetailsDlg"
 
-    // Interfaz para notificar que se guardó (opcional pero útil)
     interface RoutineDetailsUpdateListener {
         fun onRoutineDetailsUpdated()
     }

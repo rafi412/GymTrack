@@ -30,7 +30,6 @@
             android:inputType="textCapWords" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- ***** SECCIÓN CORREGIDA ***** -->
     <!-- Botones -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -54,7 +53,6 @@
             android:text="Guardar Día" />
     </LinearLayout>
 
-    <!-- ProgressBar (Ahora dentro del LinearLayout principal) -->
     <ProgressBar
         android:id="@+id/dialog_day_progress_bar"
         style="?android:attr/progressBarStyleSmall"
@@ -64,6 +62,5 @@
     android:layout_marginTop="8dp"
     android:visibility="gone"
     tools:visibility="visible"/>
-    <!-- *************************** -->
 
-</LinearLayout> <!-- Cierre del LinearLayout raíz -->
+</LinearLayout>

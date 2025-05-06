@@ -19,7 +19,7 @@
             android:text="Añadir Comida"
             android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-        <!-- Título de la Comida (Desplegable) -->
+        <!-- Título de la Comida -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout_meal_title"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:hint="Tipo de Comida">
+
             <AutoCompleteTextView
                 android:id="@+id/auto_complete_meal_title"
                 android:layout_width="match_parent"
@@ -34,7 +35,7 @@
                 android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Descripción (Opcional, para IA) -->
+        <!-- Descripción -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout_meal_description"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -42,6 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:hint="Describe la comida (Opcional, para IA)">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_meal_description"
                 android:layout_width="match_parent"
@@ -65,48 +67,70 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:text="Macronutrientes"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-            android:layout_marginBottom="8dp"/>
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
             <!-- Calorías -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/input_layout_meal_calories" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                android:layout_marginEnd="4dp" android:hint="Kcal">
+                android:id="@+id/input_layout_meal_calories"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:hint="Kcal">
+
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_text_meal_calories" android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:inputType="number"/>
+                    android:id="@+id/edit_text_meal_calories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
             <!-- Proteínas -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/input_layout_meal_protein" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                android:layout_marginStart="4dp" android:layout_marginEnd="4dp" android:hint="Prot (g)">
+                android:id="@+id/input_layout_meal_protein"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:hint="Prot (g)">
+
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_text_meal_protein" android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:inputType="number"/>
+                    android:id="@+id/edit_text_meal_protein"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
             <!-- Carbos -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/input_layout_meal_carbs" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                android:layout_marginEnd="4dp" android:hint="Carb (g)">
+                android:id="@+id/input_layout_meal_carbs"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:hint="Carb (g)">
+
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_text_meal_carbs" android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:inputType="number"/>
+                    android:id="@+id/edit_text_meal_carbs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
@@ -116,6 +140,7 @@
             android:layout_height="wrap_content"
             android:gravity="end"
             android:orientation="horizontal">
+
             <Button
                 android:id="@+id/dialog_meal_button_cancel"
                 style="?attr/materialButtonOutlinedStyle"
@@ -123,6 +148,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="Cancelar" />
+
             <Button
                 android:id="@+id/dialog_meal_button_add"
                 android:layout_width="wrap_content"

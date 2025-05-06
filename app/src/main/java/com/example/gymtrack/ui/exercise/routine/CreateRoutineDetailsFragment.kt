@@ -1,26 +1,21 @@
-package com.example.gymtrack.ui.exercise.routine // O tu paquete
+package com.example.gymtrack.ui.exercise.routine
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment // <-- *** IMPORTACIÓN NECESARIA ***
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels // Para ViewModel compartido con Activity
-// import androidx.navigation.navGraphViewModels // Alternativa si el ViewModel tiene alcance al grafo
 import androidx.navigation.fragment.findNavController
-import com.example.gymtrack.R // Asegúrate de importar tu R
-import com.example.gymtrack.databinding.FragmentCreateRoutineDetailsBinding // Importa el binding correcto
+import com.example.gymtrack.R
+import com.example.gymtrack.databinding.FragmentCreateRoutineDetailsBinding
 
-// --- ASEGÚRATE DE QUE HEREDA DE Fragment ---
 class CreateRoutineDetailsFragment : Fragment() {
 
     private var _binding: FragmentCreateRoutineDetailsBinding? = null
-    // Esta propiedad solo es válida entre onCreateView y onDestroyView.
     private val binding get() = _binding!!
 
     // Obtener instancia del ViewModel compartido (alcance a la Activity por defecto)
-    // Si tu ViewModel debe vivir solo durante el flujo de creación, considera usar
-    // navGraphViewModels(R.id.id_del_grafo_de_creacion) si anidas la navegación.
     private val routineViewModel: RoutineCreationViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -66,7 +61,6 @@ class CreateRoutineDetailsFragment : Fragment() {
             routineViewModel.setRoutineDetails(name, desc)
 
             // Navegar al siguiente fragmento (AddRoutineDaysFragment)
-            // Asegúrate de que el ID de la acción es correcto según tu mobile_navigation.xml
             findNavController().navigate(R.id.action_createRoutineDetailsFragment_to_addRoutineDaysFragment)
         }
     }

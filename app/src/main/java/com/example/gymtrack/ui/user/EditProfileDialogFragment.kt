@@ -1,6 +1,5 @@
-package com.example.gymtrack.ui.user // O donde esté tu diálogo
+package com.example.gymtrack.ui.user
 
-// Importa User desde tu paquete model
 import User
 import android.content.ContentValues.TAG // Usa esta constante TAG si quieres
 import android.os.Bundle
@@ -25,7 +24,7 @@ interface ProfileEditListener {
 class EditProfileDialogFragment : DialogFragment() {
 
     private var _binding: DialogEditProfileBinding? = null
-    private val binding get() = _binding!! // Usar con precaución
+    private val binding get() = _binding!!
 
     private var listener: ProfileEditListener? = null
 
@@ -57,7 +56,6 @@ class EditProfileDialogFragment : DialogFragment() {
     private var initialCalories: Int? = null
     private var initialProteins: Int? = null
     private var initialCarbs: Int? = null
-    // No necesitamos currentNivelActividadKey aquí, usamos selectedActividadKey directamente
 
     companion object {
         // --- Constantes para Claves de Argumentos ---
@@ -84,13 +82,10 @@ class EditProfileDialogFragment : DialogFragment() {
             args.putString(ARG_NOMBRE, user.nombre)
             args.putInt(ARG_EDAD, user.edad ?: -1)
             args.putDouble(ARG_PESO, user.peso ?: -1.0)
-            // ASUME que user.altura está en CM. Si está en metros, convierte aquí:
-            // args.putDouble(ARG_ALTURA_CM, user.altura?.let { it * 100.0 } ?: -1.0)
             args.putDouble(ARG_ALTURA_CM, user.altura ?: -1.0) // Pasando altura (asume CM)
             args.putString(ARG_SEXO, user.sexo)
             args.putString(ARG_OBJETIVO_KEY, user.objetivo) // Pasar CLAVE objetivo
             args.putString(ARG_ACTIVIDAD_KEY, user.nivelActividad) // Pasar CLAVE actividad
-            // Pasar macros iniciales (los guardados o los calculados como fallback)
             args.putInt(ARG_CALORIAS, user.caloriasDiarias ?: calculatedGoals?.calories ?: -1)
             args.putInt(ARG_PROTEINAS, user.proteinasDiarias ?: calculatedGoals?.proteinGrams ?: -1)
             args.putInt(ARG_CARBOS, user.carboDiarios ?: calculatedGoals?.carbGrams ?: -1)
@@ -135,7 +130,6 @@ class EditProfileDialogFragment : DialogFragment() {
                     "Listener ASIGNADO desde targetFragment a: ${listener!!::class.java.simpleName}"
                 )
             } else {
-                // Fallback (menos probable que funcione si targetFragment se estableció)
                 Log.w(
                     TAG,
                     "targetFragment no es el listener o es null, intentando con parent/activity..."
@@ -276,9 +270,6 @@ class EditProfileDialogFragment : DialogFragment() {
         val pesoStr = binding.dialogEditTextPeso.text.toString().trim()
         val alturaCmStr = binding.dialogEditTextAltura.text.toString().trim()
         val sexo = binding.dialogEditTextSexo.text.toString().trim()
-        // Asumiendo que tienes variables miembro o locales para los seleccionados:
-        // val selectedObjetivoKey = ... // Obtenido del AutoCompleteTextView/Spinner
-        // val selectedActividadKey = ... // Obtenido del AutoCompleteTextView/Spinner
         val caloriasStr = binding.dialogEditTextCalorias.text.toString().trim()
         val proteinasStr = binding.dialogEditTextProteinas.text.toString().trim()
         val carbosStr = binding.dialogEditTextCarbos.text.toString().trim()
@@ -306,14 +297,13 @@ class EditProfileDialogFragment : DialogFragment() {
             binding.dialogInputLayoutSexo.error = "Introduce 'Masculino' o 'Femenino'"; isValid =
                 false
         }
-        // Asegúrate que selectedObjetivoKey y selectedActividadKey se obtienen correctamente
         if (selectedObjetivoKey == null) {
             binding.dialogInputLayoutObjetivo?.error = "Selecciona un objetivo"; isValid =
-                false // Usa ?. si el layout es opcional
+                false
         }
         if (selectedActividadKey == null) {
             binding.dialogInputLayoutNivelActividad?.error =
-                "Selecciona un nivel de actividad"; isValid = false // Usa ?.
+                "Selecciona un nivel de actividad"; isValid = false
         }
         val calorias = if (caloriasStr.isNotEmpty()) caloriasStr.toIntOrNull() else null
         if (calorias == null && caloriasStr.isNotEmpty()) {
@@ -336,7 +326,6 @@ class EditProfileDialogFragment : DialogFragment() {
         }
 
         // --- Crear Bundle con los datos actualizados ---
-        // Usamos Bundle directamente, que es lo que espera setFragmentResult
         val resultBundle = Bundle().apply {
             putString("updatedNombre", nombre) // Usa claves descriptivas para MainActivity
             edad?.let { putInt("updatedEdad", it) } // Solo añade si no es null
@@ -350,7 +339,6 @@ class EditProfileDialogFragment : DialogFragment() {
             calorias?.let { putInt("updatedCalorias", it) }
             proteinas?.let { putInt("updatedProteinas", it) }
             carbos?.let { putInt("updatedCarbos", it) }
-            // Puedes añadir un flag si quieres indicar que el perfil se completó/modificó
             putBoolean("profileWasUpdated", true)
         }
 
